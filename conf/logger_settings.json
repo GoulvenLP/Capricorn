@@ -1,0 +1,69 @@
+{
+	"classToFilter": [
+    ],
+    "levelsToRecord":[ 
+    	"Warning",
+		"Information",
+		"Error",
+		"Detail",
+		"Fatal",
+		"Data"
+    ],
+    "loggerConfs": [
+    {
+	        "activate":false,
+            "parametres": {
+                "FileName": "td0.csv",
+                "LoggerKind": "enstabretagne.base.logger.loggerimpl.csv.CSVDataLogger",
+                "DirectoryName": ".\\log"
+            },
+            "classToFilter": [
+		    ],
+		    "levelsToRecord":[ 
+		    	"Information",
+		    	"Warning",
+				"Error",
+				"Fatal",
+				"Data",
+				"DataSimple",
+				"DataRecordable"
+		    ]
+        },
+        {
+	        "activate":true,
+            "parametres": {
+                "FileName": "td0.xlsx",
+                "LoggerKind": "enstabretagne.base.logger.loggerimpl.Excel.ExcelDataLogger",
+                "DirectoryName": ".\\log"
+            },
+            "classToFilter": [
+		    ],
+		    "levelsToRecord":[ 
+		    	"Information",
+		    	"Warning",
+				"Error",
+				"Fatal",
+				"Data",
+				"DataSimple",
+				"DataRecordable"
+		    ]
+        },
+        {
+	        "activate":true,
+	        "parametres": {
+	            "LoggerKind": "enstabretagne.base.logger.loggerimpl.stdoutput.SortieTexteLogger"
+	        },
+	        "classToFilter": [
+		    ],
+		    "levelsToRecord":[ 
+		    	"Warning",
+				"Information",
+				"Error",
+				"Detail",
+				"Fatal",
+				"Data"
+		    ]
+	        
+        }
+    ]
+}
