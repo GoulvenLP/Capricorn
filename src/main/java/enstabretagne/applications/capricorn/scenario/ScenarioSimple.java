@@ -23,19 +23,24 @@ public class ScenarioSimple extends SimuScenario{
 
 	@Override
 	public void Init() {
+		int scaleX = 3;	//todo: if kept: adjust that factor in the Mobile Class as well	// adjustment parameters for a better view on the map
+		int scaleY = 30;		// adjustment parameters for a better view on the map
 		super.Init();
 		var envIni = new EnvironnementInit("Env");
-		var A = envIni.addPosition("A", Vector2D.of(100, 100));
-		var B = envIni.addPosition("B", Vector2D.of(200, 300));
-		var C = envIni.addPosition("C", Vector2D.of(-100, 100));
-		var D = envIni.addPosition("D", Vector2D.of(-500, 600));
+		var factory = envIni.addPosition("Factory", Vector2D.of(310*scaleX, 5*scaleY));
+		var radar = envIni.addPosition("Radar", Vector2D.of(309*scaleX, 5*scaleY));
+		var p1 = envIni.addPosition("P1", Vector2D.of(300*scaleX, 1*scaleY));
+		var p2 = envIni.addPosition("P2", Vector2D.of(309*scaleX, 4*scaleY));
+		var p3 = envIni.addPosition("P3", Vector2D.of(309*scaleX, 6*scaleY));
+		var p4 = envIni.addPosition("P4", Vector2D.of(300*scaleX, 10*scaleY));
+		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 5*scaleY));
 
 		var env = new Environement(engine, envIni);
 		
-		var iniR = new RadarInit("R",A,50);
+		var iniR = new RadarInit("R",radar,50);
 		new Radar(engine,iniR);
 		
-		var iniM = new MobileInit("M1",D,LogicalDuration.ofSeconds(1));
+		var iniM = new MobileInit("M1",cesna,LogicalDuration.ofSeconds(1));
 		new Mobile(engine,iniM);
 		
 	}
