@@ -23,7 +23,7 @@ public static void main(String[] args) {
 
 	double graine = 15;
 	var ldStart = LogicalDateTime.Now();
-	var ldEnd = ldStart.add(LogicalDuration.ofSeconds(60));
+	var ldEnd = ldStart.add(LogicalDuration.ofMinutes(10));
 
 	var sc = new ScenarioSimpleInit("SC1",1,graine,ldStart.toString(),ldEnd.toString(), 200, 5, 5);
 

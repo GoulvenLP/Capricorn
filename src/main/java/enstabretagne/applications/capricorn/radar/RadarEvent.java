@@ -15,14 +15,22 @@ public class RadarEvent extends SimEvent {
         super(d);
     }
 
+
+    public Boolean isMobileInRadar(Mobile m) {
+        return m.position().position().getX() > (((RadarInit) entitePorteuseEvenement.getInit()).position.position().getX() - ((RadarInit) entitePorteuseEvenement.getInit()).portee);
+    }
+
     @Override
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "RadarEvent.Process", "RadarEvent à " + getDateOccurence());
 
-        //List<EntiteSimulee> mobiles = entitePorteuseEvenement.recherche(e -> (e instanceof Mobile) && ((Mobile) e).position().position().getX() > TODO:avoir ici la position du radar ? );
-        //for (EntiteSimulee e : mobiles) {
-        //    Logger.Information(entitePorteuseEvenement, "RadarEvent.Process", "Mobile trouvé : " + e);
-        //}
+        // predicat pour vérifier qu'un mobile est à certaine position du radar
+        List<EntiteSimulee> mobiles = entitePorteuseEvenement.recherche(e -> (
+                e instanceof Mobile) && isMobileInRadar((Mobile) e)
+        );
+        for (EntiteSimulee e : mobiles) {
+            Logger.Information(entitePorteuseEvenement, "RadarEvent.Process", "Mobile trouvé : " + e);
+        }
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);
     }
