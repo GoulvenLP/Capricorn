@@ -173,6 +173,7 @@ public class MoniteurGraphique2D extends Application {
 		objectCanvas = new Canvas(canvasMinWidth, canvasMinHeight);
 		backGroundCanvas = new Canvas(canvasMinWidth, canvasMinHeight);
 
+
 		// Gestion des actions des boutons
 		button1.setOnAction(e -> initScenario());
 		button2.setOnAction(e -> playOrPauseSimulation());

@@ -36,12 +36,16 @@ public class ScenarioSimple extends SimuScenario{
 		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 5*scaleY));
 
 		var env = new Environement(engine, envIni);
-		
-		var iniR = new RadarInit("R",radar,50);
+
+		// period: period of the "scan" rescheduling
+		var iniR = new RadarInit("R",radar,50, LogicalDuration.ofSeconds(1));
 		new Radar(engine,iniR);
 		
 		var iniM = new MobileInit("M1",cesna,LogicalDuration.ofSeconds(1));
 		new Mobile(engine,iniM);
+
+
+
 		
 	}
 

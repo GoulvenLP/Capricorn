@@ -96,6 +96,7 @@ public abstract class VisualConverter {
 		this.backgroundCanvas = backgroundCanvas;
 		backgroundGc = backgroundCanvas.getGraphicsContext2D();
 
+
         this.objectsCanvas = objectsCanvas;
 		objectsGc = objectsCanvas.getGraphicsContext2D();
 		
@@ -146,8 +147,6 @@ public abstract class VisualConverter {
 	public void drawCircle(boolean plain,Layers target,double center_x,double center_y,double d, Color c,String text) {
 		var gc = getGc(target);
 		
-
-		
 		double topleftx = center_x+canvasCenterX-d/2;
 		double toplefty = center_y+canvasCenterY-d/2;
 		
@@ -161,5 +160,6 @@ public abstract class VisualConverter {
 		
 		writeText(target,center_x+canvasCenterX,center_y+canvasCenterY,Color.BLACK,text);
 	}
+
 	
 }

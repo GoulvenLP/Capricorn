@@ -13,6 +13,8 @@ import enstabretagne.engine.SimuEngine;
 public class Mobile extends EntiteSimulee implements ILocatable{
 
 	public final MobileInit ini;
+	Location p;
+	SimEvent Bonjour;
 	public Mobile(SimuEngine engine, InitData ini) {
 		super(engine, ini);
 		this.ini = (MobileInit) ini;
@@ -25,8 +27,6 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 				Post(Bonjour);
 			}
 		};
-		
-		
 	}
 
 	@Override
@@ -36,13 +36,12 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		Post(Bonjour);
 	}
 
-	Location p;
+
 	@Override
 	public Location position() {
 		return p;
 	}
-	
-	SimEvent Bonjour;
+
 	public void bonjour() {
 		Logger.Information(this, "bonjour", "Bonjour POsition :" + position());
 		p=p.add(Vector2D.of(10,0));

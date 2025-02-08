@@ -7,6 +7,7 @@ import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.engine.EntiteSimulee.EtatEntite;
 
 public abstract class EntiteSimulee {
+
 	protected SimuEngine engine;
 	private InitData ini;
 
