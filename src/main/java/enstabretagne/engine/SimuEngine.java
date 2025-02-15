@@ -56,7 +56,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 		echeancier.add(ev);
 	}
 	
-	//seule m�thode donnant acc�s � l'�ch�ancier
+	//seule methode donnant acces a l'echeancier
 	protected void unPost(SimEvent ev)  {
 		ev.Posted(false);
 		echeancier.remove(ev);
@@ -90,16 +90,16 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 				setEndReached(true);
 			}
 			
-			//simple parcours de l'�ch�ancier
+			//simple parcours de l'echeancier
 			while(hasANextEvent(stepEnd))
 			{
-				//on prend le premier �v�nement suivant de l'�ch�ancier
+				//on prend le premier evenement suivant de l'echeancier
 				SimEvent ev = echeancier.first();
 				
-				//on l'enl�ve de l'�ch�ancier
+				//on l'enleve de l'echeancier
 				echeancier.remove(ev);
 				
-				//si l'entit� est DEAD on ne tire pas l'�v�nement
+				//si l'entite est DEAD on ne tire pas l'evenement
 				if(ev.entitePorteuseEvenement().getEtat()==EtatEntite.INITIALIZED) {
 					currentDate = ev.getDateOccurence();
 					ev.process();
@@ -116,7 +116,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			return pauseFlag;
 		}
 
-		//permet de savoir s'il reste un �v�nement encore � traiter
+		//permet de savoir s'il reste un evenement encore a traiter
 		private boolean hasANextEvent(LogicalDateTime d) {
 		
 			if(echeancier.size()>0) {
@@ -154,8 +154,8 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 	
 	public void terminate(boolean last) {
 		Logger.Information(this, "Terminate", "Processus d'arrêt de la simulation");
-		//on vide l'�ch�ancier.
-		//il peut contenir des �v�nements restants
+		//on vide l'echeancier.
+		//il peut contenir des evenements restants
 		//indispensable pour le prochain run
 		echeancier.clear();
 		

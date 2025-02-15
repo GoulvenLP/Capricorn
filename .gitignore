@@ -36,3 +36,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+
+### Log files
+.idea/vcs.xml
+
+### Logs
+log/*

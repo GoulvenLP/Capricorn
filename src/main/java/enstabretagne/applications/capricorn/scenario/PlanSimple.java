@@ -2,6 +2,7 @@ package enstabretagne.applications.capricorn.scenario;
 
 import java.util.LinkedList;
 
+import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.engine.SimuScenario;
 import enstabretagne.moniteurPlan.Plan;
 

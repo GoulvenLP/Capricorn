@@ -24,7 +24,7 @@ public class RadarEvent extends SimEvent {
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "RadarEvent.Process", "RadarEvent à " + getDateOccurence());
 
-        // predicat pour vérifier qu'un mobile est à certaine position du radar
+        // predicat pour vérifier qu'un mobile est à un certaine position du radar
         List<EntiteSimulee> mobiles = entitePorteuseEvenement.recherche(e -> (
                 e instanceof Mobile) && isMobileInRadar((Mobile) e)
         );
@@ -34,4 +34,6 @@ public class RadarEvent extends SimEvent {
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);
     }
+
+
 }

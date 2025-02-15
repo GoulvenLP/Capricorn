@@ -1,5 +1,6 @@
 package enstabretagne.applications.capricorn.scenario;
 
+import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import enstabretagne.applications.capricorn.environnement.Environement;
@@ -15,7 +16,8 @@ import enstabretagne.engine.SimuScenario;
 
 public class ScenarioSimple extends SimuScenario{
 
-	ScenarioSimpleInit ini;
+	private ScenarioSimpleInit ini;
+
 	public ScenarioSimple(SimuEngine engine, InitData ini) {
 		super(engine, ini);
 		this.ini = (ScenarioSimpleInit) ini;
@@ -39,14 +41,12 @@ public class ScenarioSimple extends SimuScenario{
 
 		// period: period of the "scan" rescheduling
 		var iniR = new RadarInit("R",radar,50, LogicalDuration.ofSeconds(1));
-		new Radar(engine,iniR);
+
+		new Radar(engine,iniR); // todo : bind the radar to the command center. pb: radar is of type EntiteSimulée and so is Mobile. We do not want Mobile to need the CommandCenter
 		
 		var iniM = new MobileInit("M1",cesna,LogicalDuration.ofSeconds(1));
 		new Mobile(engine,iniM);
 
-
-
-		
 	}
 
 }

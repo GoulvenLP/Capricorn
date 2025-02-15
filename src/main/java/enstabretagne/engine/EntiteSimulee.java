@@ -3,6 +3,7 @@ package enstabretagne.engine;
 import java.util.List;
 import java.util.function.Predicate;
 
+import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.engine.EntiteSimulee.EtatEntite;
 
@@ -12,12 +13,12 @@ public abstract class EntiteSimulee {
 	private InitData ini;
 
 	enum EtatEntite {NONE,INITIALIZED,DEAD};
-	//�tat de l'entit�
+	//etat de l'entite
 	private EtatEntite etat;
 	protected EtatEntite getEtat() {
 		return etat;
 	}
-	
+
 	public EntiteSimulee(SimuEngine engine,InitData ini) {
 		this.etat= EtatEntite.NONE;
 		this.engine=engine;

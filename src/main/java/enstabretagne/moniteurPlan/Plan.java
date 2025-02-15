@@ -4,7 +4,7 @@ import enstabretagne.engine.SimuEngine;
 import enstabretagne.engine.SimuScenario;
 
 public abstract class Plan {
-	//nombre de fois qu'un m�me sc�nario sera ex�cut� mais avec une graine diff�rente
+	//nombre de fois qu'un meme scenario sera execute mais avec une graine differente
 		private int nbReplique;
 		public int getNbReplique() {
 			return nbReplique;
@@ -18,7 +18,7 @@ public abstract class Plan {
 			engine = e;
 		}
 		
-		//num�ro de la r�plique actuelle
+		//numero de la replique actuelle
 		private int currentRepliqueNumber;
 		public int getCurrentRepliqueNumber() {
 			return currentRepliqueNumber;
