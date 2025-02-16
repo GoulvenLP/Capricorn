@@ -6,16 +6,23 @@ import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.applications.capricorn.radar.Radar;
 import enstabretagne.applications.capricorn.scenario.ScenarioSimple;
+import enstabretagne.base.logger.Logger;
+import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.engine.EntiteSimulee;
+import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
-public class CommandCenter implements PropertyChangeListener {
+public class CommandCenter extends EntiteSimulee implements PropertyChangeListener {
     private enum Sensor { COMMAND_CENTER, MISSILE}; // source of the radar used to detect the target
 
     private Radar radar;
@@ -27,12 +34,11 @@ public class CommandCenter implements PropertyChangeListener {
     private Location targetLastCoordinates; // coordinates used to target a detected engine
 
 
-    public CommandCenter(SimuEngine engine, Radar radar){ //todo: what are the parameters taken into account here?
-        this.radar = radar; // todo bind the radar to the command center ?
+    public CommandCenter(SimuEngine engine, InitData init){
+        super(engine, init);
         this.firedMissile = false;
         this.leadingRadar = Sensor.COMMAND_CENTER;
         this.targetLastCoordinates = null;
-
     }
 
     /**
@@ -40,6 +46,7 @@ public class CommandCenter implements PropertyChangeListener {
      * or updates its trajectory if a missile got already shot.
      */
     public void action(){
+        Logger.Information(this, "action", "Command Center action");
         if (!this.firedMissile){
             scheduleFireMissile();
         } else {
@@ -52,12 +59,32 @@ public class CommandCenter implements PropertyChangeListener {
      * Programs a missile in the scheduler for two seconds later,
      * sets the class variable firedMissile to true
      */
-    public void scheduleFireMissile(){
-        // todo : add a missile at t + 2seconds in the scheduler in direction
-        // todo: + decide which turret shoots the missile --> the closest one each time & if equi-distance, select the highest ID ?
-
+    public void scheduleFireMissile() {
         this.firedMissile = true;
+
+        // Trouver la tourelle la plus proche
+        Optional<Missile> closestTurret = this.engine.recherche(e -> e instanceof Missile)
+                .stream()
+                .map(e -> (Missile) e)
+                .min(Comparator
+                        .comparingDouble(m -> ((Missile)m).position().position().distance(this.targetLastCoordinates.position())) // Tri par distance
+                        .thenComparingInt(m -> ((Missile)m).getId()).reversed()); // ID le plus élevé en cas d'égalité
+
+        // Si une tourelle est trouvée, planifier le tir
+        closestTurret.ifPresent(turret -> {
+            Logger.Detail(this, "scheduleFireMissile", "Tourelle la plus proche : " + turret.getId());
+
+            // Planifier le tir après 2 secondes
+            SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
+                @Override
+                public void process() {
+                    turret.Fire();
+                }
+            };
+            super.Post(fireMissile);
+        });
     }
+
 
 
     /**
@@ -78,9 +105,7 @@ public class CommandCenter implements PropertyChangeListener {
      *          and the property that has changed.
      */
     public void propertyChange(PropertyChangeEvent evt){
-        JsonObject coordinates = (JsonObject) evt.getNewValue();
-        ObjectMapper objectMapper = new ObjectMapper();
-        this.targetLastCoordinates =  objectMapper.readValue(evt.getNewValue(), Location.class); // todo fix this
+        this.targetLastCoordinates = (Location) evt.getNewValue();
         this.action();
     }
 

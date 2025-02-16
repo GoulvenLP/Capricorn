@@ -13,13 +13,16 @@ public abstract class VisualConverter {
 	protected double canvasCenterX = 0;
 	protected double canvasCenterY = 0;
 	
-	protected double minX; protected double minY;
-	protected double maxX; protected double maxY;
+	protected double minX;
+	protected double minY;
+	protected double maxX;
+	protected double maxY;
 	
 	protected double newWidth;
 	protected double newHeight;
 
-	protected double translateX;	protected double translateY;
+	protected double translateX;
+	protected double translateY;
 
 	protected Canvas backgroundCanvas;
 	protected GraphicsContext backgroundGc;

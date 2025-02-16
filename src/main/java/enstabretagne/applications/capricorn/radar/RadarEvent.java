@@ -1,6 +1,7 @@
 package enstabretagne.applications.capricorn.radar;
 
 import enstabretagne.applications.capricorn.mobile.Mobile;
+import enstabretagne.applications.capricorn.mobile.MobileInit;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
@@ -30,6 +31,8 @@ public class RadarEvent extends SimEvent {
         );
         for (EntiteSimulee e : mobiles) {
             Logger.Information(entitePorteuseEvenement, "RadarEvent.Process", "Mobile trouvé : " + e);
+            // alert the radar that a mobile is in its range and send the mobile position to the command center
+            ((Radar) entitePorteuseEvenement).alertCommandCenter(((MobileInit)e.getInit()).position);
         }
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);

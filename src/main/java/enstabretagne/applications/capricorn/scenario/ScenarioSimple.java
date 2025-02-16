@@ -1,6 +1,9 @@
 package enstabretagne.applications.capricorn.scenario;
 
 import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
+import enstabretagne.applications.capricorn.commandcenter.CommandCenterInit;
+import enstabretagne.applications.capricorn.missile.Missile;
+import enstabretagne.applications.capricorn.missile.MissileInit;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import enstabretagne.applications.capricorn.environnement.Environement;
@@ -42,10 +45,27 @@ public class ScenarioSimple extends SimuScenario{
 		// period: period of the "scan" rescheduling
 		var iniR = new RadarInit("R",radar,50, LogicalDuration.ofSeconds(1));
 
-		new Radar(engine,iniR); // todo : bind the radar to the command center. pb: radar is of type EntiteSimulée and so is Mobile. We do not want Mobile to need the CommandCenter
+		// Missiles (init)
+		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);
+		var iniM2 = new MissileInit("M2",p2,LogicalDuration.ofSeconds(1), 2);
+		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3);
+		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4);
+
+		var iniCC = new CommandCenterInit("CommandCenter");
+
+		var iniCessna = new MobileInit("C1",cesna,LogicalDuration.ofSeconds(1));
+
+		var cc = new CommandCenter(engine, iniCC);
+
+		new Radar(engine,iniR, cc);
+
+		// missiles are charged, but not fired yet
+		new Missile(engine,iniM1);
+		new Missile(engine,iniM2);
+		new Missile(engine,iniM3);
+		new Missile(engine,iniM4);
 		
-		var iniM = new MobileInit("M1",cesna,LogicalDuration.ofSeconds(1));
-		new Mobile(engine,iniM);
+		new Mobile(engine,iniCessna);
 
 	}
 

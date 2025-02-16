@@ -14,17 +14,17 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 
 	public final MobileInit ini;
 	Location p;
-	SimEvent Bonjour;
+	SimEvent Move;
 	public Mobile(SimuEngine engine, InitData ini) {
 		super(engine, ini);
 		this.ini = (MobileInit) ini;
-		
-		Bonjour = new SimEvent(engine.Now()) {
+
+		Move = new SimEvent(engine.Now()) {
 			@Override
 			public void process() {
-				bonjour();
-				Bonjour.rescheduleAt(Now().add(Mobile.this.ini.period));
-				Post(Bonjour);
+				move();
+				Move.rescheduleAt(Now().add(Mobile.this.ini.period));
+				Post(Move);
 			}
 		};
 	}
@@ -33,7 +33,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	public void Init() {
 		super.Init();
 		p=ini.position;
-		Post(Bonjour);
+		Post(Move);
 	}
 
 
@@ -42,7 +42,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		return p;
 	}
 
-	public void bonjour() {
+	public void move() {
 		Logger.Information(this, "bonjour", "Bonjour POsition :" + position());
 		p=p.add(Vector2D.of(10,0));
 	}

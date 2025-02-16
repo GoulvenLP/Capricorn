@@ -7,6 +7,7 @@ module com.example.capricorn {
     requires jakarta.json;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires java.sql;
 
     exports enstabretagne.applications.capricorn;
     exports enstabretagne.applications.capricorn.scenario;
@@ -14,6 +15,7 @@ module com.example.capricorn {
     exports enstabretagne.moniteur2D;
 
     exports enstabretagne.base.logger;
+
 
     opens com.example.capricorn to javafx.fxml;
     exports com.example.capricorn;
