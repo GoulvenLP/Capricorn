@@ -43,7 +43,7 @@ public class ScenarioSimple extends SimuScenario{
 		var env = new Environement(engine, envIni);
 
 		// period: period of the "scan" rescheduling
-		var iniR = new RadarInit("R",radar,50, LogicalDuration.ofSeconds(1));
+		var iniR = new RadarInit("R",radar,700, LogicalDuration.ofSeconds(1));
 
 		// Missiles (init)
 		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);

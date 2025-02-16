@@ -28,11 +28,11 @@ public class Missile extends EntiteSimulee implements ILocatable {
         position=ini.position;
     }
 
-    public void Fire() {
+    public void Fire(Location target) {
         Move = new SimEvent(engine.Now()) {
             @Override
             public void process() {
-                move();
+                move(target);
                 Move.rescheduleAt(Now().add(Missile.this.ini.period));
                 Post(Move);
             }
@@ -40,8 +40,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Post(Move);
     }
 
-    private void move(){
-        position=position.add(Vector2D.of(-10,0));
+    private void move(Location target) {
+        // Calcul du vecteur direction vers la cible
+        Vector2D direction = target.position().subtract(position.position()).normalize().multiply(10); // 10 = vitesse du missile
+
+        // Mise à jour de la position du missile
+        position = position.add(direction);
     }
 
     public Integer getId() {
