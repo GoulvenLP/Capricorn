@@ -1,38 +1,30 @@
 package enstabretagne.applications.capricorn.commandcenter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.missile.Missile;
-import enstabretagne.applications.capricorn.mobile.Mobile;
-import enstabretagne.applications.capricorn.radar.Radar;
-import enstabretagne.applications.capricorn.scenario.ScenarioSimple;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
-import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 public class CommandCenter extends EntiteSimulee implements PropertyChangeListener {
     private enum Sensor { COMMAND_CENTER, MISSILE}; // source of the radar used to detect the target
-
     private Location targetLastCoordinates; // coordinates used to target a detected engine
-
     private boolean firedMissile; // true if a missile got already shot
+    private Sensor radarMode;
 
     public CommandCenter(SimuEngine engine, InitData init){
         super(engine, init);
         this.firedMissile = false;
         this.targetLastCoordinates = null;
+        this.radarMode = Sensor.COMMAND_CENTER;
     }
 
     /**
@@ -42,6 +34,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
     public void action(){
         Logger.Information(this, "action", "Command Center action");
         if (!this.firedMissile){
+            Logger.Information(this, "action", "Missile fired");
             scheduleFireMissile();
         } else {
             updateMissileTrajectory();
@@ -82,12 +75,13 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
 
 
     /**
-     * Updates the missile trajectory if and only if a missile got shot and if the leading radar is the
+     * Updates the missile's trajectory if and only if a missile got shot and if the leading radar is the
      * command center's one.
      * Bases the update on the coordinates returned by the listener on the radar
      */
     public void updateMissileTrajectory(){
         // todo: implement
+
     }
 
 
@@ -97,10 +91,13 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      *          and the property that has changed.
      */
     public void propertyChange(PropertyChangeEvent evt){
-        this.targetLastCoordinates = (Location) evt.getNewValue();
-        this.action();
+        if (evt.getPropertyName().equals("mobile")) {
+            this.targetLastCoordinates = (Location) evt.getNewValue();
+            this.action();
+        } else if (evt.getPropertyName().equals("switchingRadar")) {
+            this.radarMode = Sensor.MISSILE;
+        }
     }
-
 
 
 

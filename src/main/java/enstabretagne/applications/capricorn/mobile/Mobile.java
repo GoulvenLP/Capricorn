@@ -15,9 +15,14 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	public final MobileInit ini;
 	Location p;
 	SimEvent Move;
-	public Mobile(SimuEngine engine, InitData ini) {
+	private double speed;
+	private double probaFail;
+
+	public Mobile(SimuEngine engine, InitData ini, double speed) {
 		super(engine, ini);
 		this.ini = (MobileInit) ini;
+		this.speed = speed;
+		this.probaFail = 0.1;
 
 		Move = new SimEvent(engine.Now()) {
 			@Override
@@ -43,8 +48,8 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	}
 
 	public void move() {
-		Logger.Information(this, "bonjour", "Bonjour POsition :" + position());
-		p=p.add(Vector2D.of(10,0));
+		Logger.Information(this, "bonjour", "Bonjour Position :" + position());
+		p=p.add(Vector2D.of(10 * this.speed/200,0));
 	}
 	@Override
 	public String toString() {

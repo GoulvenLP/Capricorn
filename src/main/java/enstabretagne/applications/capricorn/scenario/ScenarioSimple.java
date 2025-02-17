@@ -28,28 +28,30 @@ public class ScenarioSimple extends SimuScenario{
 
 	@Override
 	public void Init() {
-		int scaleX = 3;	//todo: if kept: adjust that factor in the Mobile Class as well	// adjustment parameters for a better view on the map
-		int scaleY = 30;		// adjustment parameters for a better view on the map
+		int scaleX = 1;	//in meters
+		int scaleY = 1; 	// in meters
 		super.Init();
 		var envIni = new EnvironnementInit("Env");
-		var factory = envIni.addPosition("Factory", Vector2D.of(310*scaleX, 5*scaleY));
-		var radar = envIni.addPosition("Radar", Vector2D.of(309*scaleX, 5*scaleY));
-		var p1 = envIni.addPosition("P1", Vector2D.of(300*scaleX, 1*scaleY));
-		var p2 = envIni.addPosition("P2", Vector2D.of(309*scaleX, 4*scaleY));
-		var p3 = envIni.addPosition("P3", Vector2D.of(309*scaleX, 6*scaleY));
-		var p4 = envIni.addPosition("P4", Vector2D.of(300*scaleX, 10*scaleY));
-		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 5*scaleY));
+		var factory = envIni.addPosition("Factory", Vector2D.of(310*scaleX, 10*scaleY));
+
+		var radar = envIni.addPosition("Radar", Vector2D.of(309*scaleX, 10*scaleY));
+		var p1 = envIni.addPosition("P1", Vector2D.of(300*scaleX, 0*scaleY));
+		var p2 = envIni.addPosition("P2", Vector2D.of(309*scaleX, 9*scaleY));
+		var p3 = envIni.addPosition("P3", Vector2D.of(309*scaleX, 11*scaleY));
+		var p4 = envIni.addPosition("P4", Vector2D.of(300*scaleX, 20*scaleY));
+		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
 
 		var env = new Environement(engine, envIni);
 
 		// period: period of the "scan" rescheduling
-		var iniR = new RadarInit("R",radar,700, LogicalDuration.ofSeconds(1));
 
 		// Missiles (init)
 		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);
 		var iniM2 = new MissileInit("M2",p2,LogicalDuration.ofSeconds(1), 2);
 		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3);
 		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4);
+
+		var iniR = new RadarInit("R",radar,100, LogicalDuration.ofSeconds(1));
 
 		var iniCC = new CommandCenterInit("CommandCenter");
 
@@ -59,13 +61,13 @@ public class ScenarioSimple extends SimuScenario{
 
 		new Radar(engine,iniR, cc);
 
-		// missiles are charged, but not fired yet
-		new Missile(engine,iniM1);
-		new Missile(engine,iniM2);
-		new Missile(engine,iniM3);
-		new Missile(engine,iniM4);
+		// missiles are charged, but not fired yet. All rattached to the command center
+		new Missile(engine,iniM1, cc);
+		new Missile(engine,iniM2, cc);
+		new Missile(engine,iniM3, cc);
+		new Missile(engine,iniM4, cc);
 		
-		new Mobile(engine,iniCessna);
+		new Mobile(engine,iniCessna, this.ini.getSpeed());
 
 	}
 

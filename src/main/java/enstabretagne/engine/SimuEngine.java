@@ -112,7 +112,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			
 			currentDate = stepEnd;
 
-			Logger.Detail(this, "simulate(dt)", "Date de fin de step =" + currentDate);
+//			Logger.Detail(this, "simulate(dt)", "Date de fin de step =" + currentDate); // TODO Reenable?
 			return pauseFlag;
 		}
 

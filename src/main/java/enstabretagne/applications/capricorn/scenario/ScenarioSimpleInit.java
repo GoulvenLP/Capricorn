@@ -28,4 +28,9 @@ public class ScenarioSimpleInit extends SimuScenarioInitData {
 	}
 
 	
+	public double getSpeed(){
+		return this.vCessna;
+	}
+
+	
 }

@@ -1,5 +1,6 @@
 package enstabretagne.applications.capricorn.missile;
 
+import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
@@ -19,4 +20,5 @@ public class MissileEvent extends SimEvent {
 
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
     }
+
 }
