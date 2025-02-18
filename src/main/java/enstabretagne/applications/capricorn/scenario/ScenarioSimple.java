@@ -42,8 +42,8 @@ public class ScenarioSimple extends SimuScenario{
 
 		var radar = envIni.addPosition("Radar", Vector2D.of((base_distance+30)*scaleX, 10*scaleY));
 		var p1 = envIni.addPosition("P1", Vector2D.of(base_distance*scaleX, 0*scaleY));
-		var p2 = envIni.addPosition("P2", Vector2D.of((base_distance+30)*scaleX, 9*scaleY));
-		var p3 = envIni.addPosition("P3", Vector2D.of((base_distance+30)*scaleX, 11*scaleY));
+		var p2 = envIni.addPosition("P2", Vector2D.of((base_distance+30)*scaleX, 2*scaleY));
+		var p3 = envIni.addPosition("P3", Vector2D.of((base_distance+30)*scaleX, 18*scaleY));
 		var p4 = envIni.addPosition("P4", Vector2D.of(base_distance*scaleX, 20*scaleY));
 
 		//var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
