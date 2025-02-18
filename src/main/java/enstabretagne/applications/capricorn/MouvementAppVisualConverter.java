@@ -27,7 +27,7 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 		public void convRadar(Radar r) {
 		drawCircle(true,Layers.Objects , r.position().position().getX(),r.position().position().getY(), 5, Color.AQUA, r.rIni.name);
-		drawCircle(false,Layers.Objects , r.position().position().getX(),r.position().position().getY(), r.rIni.portee, Color.AQUA, "");
+		drawCircle(false,Layers.Objects , r.position().position().getX(),r.position().position().getY(), r.rIni.portee*2, Color.AQUA, "");
 	}
 
 	public void convEnv(Environement env) {
