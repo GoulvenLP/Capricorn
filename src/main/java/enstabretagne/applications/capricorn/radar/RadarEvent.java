@@ -20,6 +20,13 @@ public class RadarEvent extends SimEvent {
     public Boolean isMobileInRadar(Mobile m) {
         RadarInit radarInit = (RadarInit) entitePorteuseEvenement.getInit();
         // si la distance entre le mobile et le radar est inférieure à la portée du radar
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+        System.out.println("Position du mobile : " + m.position().position());
+        System.out.println("Position du radar : " + radarInit.position.position());
+        System.out.println("Distance entre le mobile et le radar : " + m.position().position().distance(radarInit.position.position()));
+        System.out.println("Portée du radar : " + radarInit.portee);
+        System.out.println("------------------------------------------------------------------------------------------------------------");
+
         return m.position().position().distance(radarInit.position.position()) < radarInit.portee;
     }
 

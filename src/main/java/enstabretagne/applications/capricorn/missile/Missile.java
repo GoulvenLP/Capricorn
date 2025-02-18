@@ -64,7 +64,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
                 // todo: timing goes to ms here
             }
         }
-        Logger.Information(this, "move", "new coordinates are : " + target); //todo delete
         Vector2D direction = target.position().subtract(position.position()).normalize().multiply(this.speed/150); // 10 = vitesse du missile
         // todo: adapt the move to the timer? (n seconds, ms...)
 

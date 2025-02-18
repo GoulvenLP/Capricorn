@@ -28,19 +28,26 @@ public class ScenarioSimple extends SimuScenario{
 
 	@Override
 	public void Init() {
-		int scaleX = 1;	//in meters
-		int scaleY = 1; 	// in meters
+		//int scaleX = 1;	//in meters
+		//int scaleY = 1; 	// in meters
+
+		int scaleX = 5;	//in meters
+		int scaleY = 20; 	// in meters
+
+		int base_distance = 100; // just for better visualization
+
 		super.Init();
 		var envIni = new EnvironnementInit("Env");
-		var factory = envIni.addPosition("Factory", Vector2D.of(310*scaleX, 10*scaleY));
+		var factory = envIni.addPosition("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
 
-		var radar = envIni.addPosition("Radar", Vector2D.of(309*scaleX, 10*scaleY));
-		var p1 = envIni.addPosition("P1", Vector2D.of(300*scaleX, 0*scaleY));
-		var p2 = envIni.addPosition("P2", Vector2D.of(309*scaleX, 9*scaleY));
-		var p3 = envIni.addPosition("P3", Vector2D.of(309*scaleX, 11*scaleY));
-		var p4 = envIni.addPosition("P4", Vector2D.of(300*scaleX, 20*scaleY));
+		var radar = envIni.addPosition("Radar", Vector2D.of((base_distance+30)*scaleX, 10*scaleY));
+		var p1 = envIni.addPosition("P1", Vector2D.of(base_distance*scaleX, 0*scaleY));
+		var p2 = envIni.addPosition("P2", Vector2D.of((base_distance+30)*scaleX, 9*scaleY));
+		var p3 = envIni.addPosition("P3", Vector2D.of((base_distance+30)*scaleX, 11*scaleY));
+		var p4 = envIni.addPosition("P4", Vector2D.of(base_distance*scaleX, 20*scaleY));
+
+		//var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
 		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
-
 		var env = new Environement(engine, envIni);
 
 		// period: period of the "scan" rescheduling
@@ -51,7 +58,7 @@ public class ScenarioSimple extends SimuScenario{
 		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3);
 		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4);
 
-		var iniR = new RadarInit("R",radar,100, LogicalDuration.ofSeconds(1));
+		var iniR = new RadarInit("R",radar,300, LogicalDuration.ofSeconds(1));
 
 		var iniCC = new CommandCenterInit("CommandCenter");
 
