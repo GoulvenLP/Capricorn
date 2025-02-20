@@ -55,7 +55,11 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 
 	public void move() {
 		Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
-		p=p.add(Vector2D.of(10 * this.speed/200,0));
+		Vector2D direction = ini.direction.position().subtract(this.getPosition().position())
+				.normalize()
+				.multiply(10*this.speed / 200);
+
+		p=p.add(direction);
 	}
 	@Override
 	public String toString() {

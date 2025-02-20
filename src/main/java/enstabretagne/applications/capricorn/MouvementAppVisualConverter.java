@@ -2,6 +2,7 @@ package enstabretagne.applications.capricorn;
 
 
 import enstabretagne.applications.capricorn.environnement.Environement;
+import enstabretagne.applications.capricorn.factory.Factory;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.applications.capricorn.radar.Radar;
@@ -19,6 +20,11 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 		addVisualMapper(Radar.class, this::convRadar);
 		addVisualMapper(Mobile.class, this::convMobile);
 		addVisualMapper(Missile.class, this::convMissile);
+		addVisualMapper(Factory.class, this::convFactory);
+	}
+
+	public void convFactory(Factory f) {
+		drawCircle(true, Layers.Objects, f.getPosition().position().getX(), f.getPosition().position().getY(), 5, Color.GREEN, f.ini.name);
 	}
 
 	public void convMobile(Mobile m) {

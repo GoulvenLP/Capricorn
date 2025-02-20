@@ -78,18 +78,6 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 		pauseFlag = true;
 	}
 
-	/**
-	 * checks the whole system each time a variable is updated and removes any dead Entity found
-	 */
-	private void updateEntitePorteuse(){
-		for (EntiteSimulee e: this.mesEntitesSimulees){
-			if (e.getEtat().equals(EtatEntite.DEAD)){
-				Logger.Information(this, "remove", "Dead EntiteSimulee found --> removing it");
-				this.mesEntitesSimulees.remove(e);
-			}
-		}
-	}
-	
 	//boucle de simulation
 		public boolean simulate(LogicalDuration d)
 		{
@@ -116,7 +104,6 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 					currentDate = ev.getDateOccurence();
 					ev.process();
 				}
-				updateEntitePorteuse();
 
 				if(pauseFlag) {
 					stepEnd = currentDate;

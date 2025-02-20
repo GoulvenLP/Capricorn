@@ -80,18 +80,22 @@ public abstract class VisualConverter {
 		if(!mappers.containsKey(m))
 			mappers.put(c, m);
 	}
-	
-	void updateVisualDataModel() {
-		backgroundGc.clearRect(minX, minY,maxX-minX,maxY-minY);
-		objectsGc.clearRect(minX, minY,maxX-minX,maxY-minY);
 
-		for(var e:engine.mesEntitesSimulees)
-		{
-			if(e.getEtat() != EntiteSimulee.EtatEntite.DEAD){
+	void updateVisualDataModel() {
+		backgroundGc.clearRect(minX, minY, maxX - minX, maxY - minY);
+		objectsGc.clearRect(minX, minY, maxX - minX, maxY - minY);
+
+		var iterator = engine.mesEntitesSimulees.iterator();
+		while (iterator.hasNext()) {
+			var e = iterator.next();
+			if (e.getEtat() != EntiteSimulee.EtatEntite.DEAD) {
 				convert(e);
-			};
+			} else {
+				iterator.remove(); // Suppression sûre
+			}
 		}
 	}
+
 
 	public void init(SimuEngine engine,Canvas backgroundCanvas, Canvas objectsCanvas, double maxX, double maxY) {
 		this.engine = engine;

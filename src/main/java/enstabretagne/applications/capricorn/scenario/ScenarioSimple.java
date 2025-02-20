@@ -2,6 +2,8 @@ package enstabretagne.applications.capricorn.scenario;
 
 import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.applications.capricorn.commandcenter.CommandCenterInit;
+import enstabretagne.applications.capricorn.factory.Factory;
+import enstabretagne.applications.capricorn.factory.FactoryInit;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.missile.MissileInit;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
@@ -47,10 +49,14 @@ public class ScenarioSimple extends SimuScenario{
 		var p4 = envIni.addPosition("P4", Vector2D.of(base_distance*scaleX, 20*scaleY));
 
 		//var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
-		var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
+		var cesna_1 = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
+		var cesna_2 = envIni.addPosition("cesna", Vector2D.of(10*scaleX, 0*scaleY));
 		var env = new Environement(engine, envIni);
 
 		// period: period of the "scan" rescheduling
+
+		// Factory
+		var iniF = new FactoryInit("Factory",factory);
 
 		// Missiles (init)
 		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);
@@ -58,13 +64,21 @@ public class ScenarioSimple extends SimuScenario{
 		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3);
 		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4);
 
+		// Radar
 		var iniR = new RadarInit("R",radar,300, LogicalDuration.ofSeconds(1));
 
+		// Command Center
 		var iniCC = new CommandCenterInit("CommandCenter");
 
-		var iniCessna = new MobileInit("C1",cesna,LogicalDuration.ofSeconds(1));
+
+		// Cessna - the target point is the factory
+		var iniCessna1 = new MobileInit("C1",cesna_1,LogicalDuration.ofSeconds(1), factory);
+		var iniCessna2 = new MobileInit("C2",cesna_2,LogicalDuration.ofSeconds(1), factory);
 
 		var cc = new CommandCenter(engine, iniCC);
+
+
+		new Factory(engine, iniF);
 
 		new Radar(engine,iniR, cc);
 
@@ -74,7 +88,8 @@ public class ScenarioSimple extends SimuScenario{
 		new Missile(engine,iniM3, cc);
 		new Missile(engine,iniM4, cc);
 		
-		new Mobile(engine,iniCessna, this.ini.getSpeed());
+		new Mobile(engine,iniCessna1, this.ini.getSpeed());
+		new Mobile(engine,iniCessna2, this.ini.getSpeed());
 
 	}
 
