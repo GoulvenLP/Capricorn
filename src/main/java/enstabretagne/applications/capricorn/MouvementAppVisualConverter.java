@@ -19,13 +19,13 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 		addVisualMapper(Radar.class, this::convRadar);
 		addVisualMapper(Mobile.class, this::convMobile);
 		addVisualMapper(Missile.class, this::convMissile);
-}
+	}
 
 	public void convMobile(Mobile m) {
 		drawCircle(true,Layers.Objects , m.getPosition().position().getX(),m.getPosition().position().getY(), 5, Color.BLUE, m.ini.name);
-
 	}
-		public void convRadar(Radar r) {
+
+	public void convRadar(Radar r) {
 		drawCircle(true,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), 5, Color.AQUA, r.rIni.name);
 		drawCircle(false,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), r.rIni.portee*2, Color.AQUA, "");
 	}

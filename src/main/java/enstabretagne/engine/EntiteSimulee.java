@@ -35,6 +35,10 @@ public abstract class EntiteSimulee {
 		ev.entitePorteuseEvenement = this;
 		engine.Post(ev);
 	}
+
+	public void unPost(SimEvent ev) {
+		engine.unPost(ev);
+	}
 	
 	public LogicalDateTime Now() {
 		return engine.SimulationDate();
@@ -46,6 +50,7 @@ public abstract class EntiteSimulee {
 	public void Init() {
 		etat = EtatEntite.INITIALIZED;
 	}
+
 	protected void terminate() {
 		etat = EtatEntite.DEAD;
 	}

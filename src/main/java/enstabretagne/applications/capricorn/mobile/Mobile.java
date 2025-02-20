@@ -34,6 +34,12 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		};
 	}
 
+	public void explode() {
+		Logger.Information(this, "explode", "Explosion Position :" + getPosition());
+		unPost(Move);
+		terminate();
+	}
+
 	@Override
 	public void Init() {
 		super.Init();

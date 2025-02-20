@@ -3,6 +3,7 @@ package enstabretagne.applications.capricorn.missile;
 import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.applications.capricorn.expertise.ILocatable;
 import enstabretagne.applications.capricorn.expertise.Location;
+import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
@@ -32,7 +33,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         super(engine, ini);
         this.isActive = false;
         this.ini = (MissileInit) ini;
-        this.range = 20;
+        this.range = 60;
         this.probaFail = 0.1;
         this.speed = 1500;
         this.embeddedRadarActivated = false;
@@ -54,6 +55,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
             @Override
             public void process() {
                 move(Missile.this.target); // très important, on utilise les coords de la cible mises à jour
+                checkImpact();
                 Move.rescheduleAt(Now().add(Missile.this.ini.period));
                 Post(Move);
             }
@@ -87,6 +89,26 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.position = this.position.add(direction);
     }
 
+    private void checkImpact() {
+        // get the Mobile
+        this.engine.recherche(e -> {
+            if (e instanceof Mobile) {
+                Mobile m = (Mobile) e;
+                if (m.getPosition().position().distance(this.position.position()) <= 5) {
+                    Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
+                    this.isActive = false;
+                    terminate();
+                    unPost(Move);
+                    m.explode();
+
+                }
+            }
+            return false;
+        });
+
+    }
+
+
 
     /**
      * Verifies if the submitted target is close enough so that the missile's radar
@@ -98,6 +120,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Logger.Information(this, "isEmbeddedRadarRelaying", "Checking if target is in radar range");
         return this.range >= target.position().distance(position.position());
     }
+
+
 
     public Integer getId() {
         return ini.id;

@@ -118,7 +118,8 @@ public abstract class VisualConverter {
 		
 	}
 	
-	protected enum Layers {Objects,BackGround}; 
+	protected enum Layers {Objects,BackGround};
+
 	protected GraphicsContext getGc(Layers target) {
 		GraphicsContext gc = null;
 		if(target == Layers.Objects) {
