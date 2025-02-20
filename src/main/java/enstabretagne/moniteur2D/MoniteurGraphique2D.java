@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.InitData;
@@ -34,20 +35,9 @@ public class MoniteurGraphique2D extends Application {
 
 	// Noms à donner aux paramètres pour initialiser le moniteur JavaFX (capture des
 	// args)
-	public class RequiredParams {
-		public static final String ScenarioType = "ScenarioType";
-		public static final String ScenarioInitType = "ScenarioInitType";
-		public static final String ScenarioInit = "ScenarioInit";
-		public static final String VisualConverter = "VisualConverter";
-	}
 
-	// Etat du moniteur graphique
-	public enum MonitorState {
-		STOP, RUN, INITIALIZED, PAUSE
-	};
-
+	private SimuEngine engine;
 	MonitorState state;
-
 	// Service qui fait la transformation des objets simulés en objets graphiques
 	VisualConverter visualConverter;
 	List<Shape> visualDataModel;
@@ -59,6 +49,44 @@ public class MoniteurGraphique2D extends Application {
 	// Boucle de rafraichissement du compteur monothreadée
 	Timeline boucleAffichageTempsReelEcoule;
 	private int frameCount;
+
+	private Jsonb jsonb;
+	SimuScenarioInitData scenario;
+	Constructor<SimuScenario> construct;
+
+
+	private Button button1;
+	private Button button2;
+	private Button button3;
+	private Button button4;
+
+	private Label label1;
+	private Label label2;
+
+	private ToolBar toolbar;
+
+	private BorderPane root;
+
+	private Canvas objectCanvas;
+	private Canvas backGroundCanvas;
+
+	private Pane canvasContainer;
+	private ScrollPane scrollPane;
+
+	private double canvasMinWidth;
+	private double canvasMinHeight;
+
+	public class RequiredParams {
+		public static final String ScenarioType = "ScenarioType";
+		public static final String ScenarioInitType = "ScenarioInitType";
+		public static final String ScenarioInit = "ScenarioInit";
+		public static final String VisualConverter = "VisualConverter";
+	}
+
+	// Etat du moniteur graphique
+	public enum MonitorState {
+		STOP, RUN, INITIALIZED, PAUSE
+	};
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -79,13 +107,17 @@ public class MoniteurGraphique2D extends Application {
 		}));
 		boucleSimulation.setCycleCount(Timeline.INDEFINITE); // Répéter indéfiniment
 
+		primaryStage.setOnCloseRequest(e -> {
+			System.out.println("[*] Fermeture de l'application");
+			stopSimulation();
+			primaryStage.close();
+			Logger.Terminate();
+		});
+
 		primaryStage.show();
 
 	}
 
-	private Jsonb jsonb;
-	SimuScenarioInitData scenario;
-	Constructor<SimuScenario> construct;
 
 	protected void loadGUIConfiguration() {
 		JsonbConfig config = new JsonbConfig().withFormatting(true);
@@ -132,26 +164,7 @@ public class MoniteurGraphique2D extends Application {
 
 	}
 
-	private Button button1;
-	private Button button2;
-	private Button button3;
-	private Button button4;
 
-	private Label label1;
-	private Label label2;
-
-	private ToolBar toolbar;
-
-	private BorderPane root;
-
-	private Canvas objectCanvas;
-	private Canvas backGroundCanvas;
-
-	private Pane canvasContainer;
-	private ScrollPane scrollPane;
-
-	private double canvasMinWidth;
-	private double canvasMinHeight;
 
 	protected void initGUI(Stage primaryStage) {
 		button1 = new Button("Init Simulation");
@@ -211,7 +224,7 @@ public class MoniteurGraphique2D extends Application {
 
 	}
 
-	private SimuEngine engine;
+
 
 	protected void initScenario() {
 
@@ -272,6 +285,7 @@ public class MoniteurGraphique2D extends Application {
         	setLabels();
     	}
     }
+
 	protected void stopSimulation() {
 		if (state == MonitorState.RUN || state == MonitorState.PAUSE ||state == MonitorState.INITIALIZED) {
 			{

@@ -32,12 +32,13 @@ public class Missile extends EntiteSimulee implements ILocatable {
         super(engine, ini);
         this.isActive = false;
         this.ini = (MissileInit) ini;
-        this.range = 10;
-        this.pcs = new PropertyChangeSupport(this);
-        this.pcs.addPropertyChangeListener(commandCenter);
+        this.range = 20;
         this.probaFail = 0.1;
         this.speed = 1500;
         this.embeddedRadarActivated = false;
+
+        this.pcs = new PropertyChangeSupport(this);
+        this.pcs.addPropertyChangeListener(commandCenter);
     }
 
     @Override
@@ -66,18 +67,26 @@ public class Missile extends EntiteSimulee implements ILocatable {
     }
 
     private void move(Location target) {
-        if (!this.embeddedRadarActivated){
-            this.embeddedRadarActivated = isEmbeddedRadarRelaying(target);
-            if (this.embeddedRadarActivated){
-                Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
-                this.pcs.firePropertyChange("switchingRadar", null, null);
-                // todo: timing goes to ms here
-            }
+        // Vérification et activation du radar embarqué si nécessaire
+        if (!this.embeddedRadarActivated && isEmbeddedRadarRelaying(target)) {
+            this.embeddedRadarActivated = true;
+            Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
+            this.pcs.firePropertyChange("switchingRadar", null, null);
+            // TODO: timing goes to ms here
+            this.speed = 2000;
         }
-        Vector2D direction = target.position().subtract(position.position()).normalize().multiply(this.speed/150); // 10 = vitesse du missile
+
+        // Calcul du vecteur direction
+        Vector2D currentPos = this.position.position();
+        Vector2D targetPos = target.position();
+        Vector2D direction = targetPos.subtract(currentPos)
+                .normalize()
+                .multiply(this.speed / 150);
+
         // Mise à jour de la position du missile
-        position = position.add(direction);
+        this.position = this.position.add(direction);
     }
+
 
     /**
      * Verifies if the submitted target is close enough so that the missile's radar
@@ -86,7 +95,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
      * @return true if the target is at range for the missile's radar, else returns false
      */
     public boolean isEmbeddedRadarRelaying(Location target){
-        Logger.Information(this, "checking", target.position().distance(position.position()) + ""); //todo adjust
+        Logger.Information(this, "isEmbeddedRadarRelaying", "Checking if target is in radar range");
         return this.range >= target.position().distance(position.position());
     }
 

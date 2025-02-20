@@ -79,19 +79,17 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * command center's one.
      * Bases the update on the coordinates returned by the listener on the radar
      */
-    public void updateMissileTrajectory(){
-        Optional<Missile> missile = this.engine.recherche(e -> e instanceof Missile)
+    public void updateMissileTrajectory() {
+        this.engine.recherche(e -> e instanceof Missile)
                 .stream()
                 .map(e -> (Missile) e)
-                .filter(Missile::isActive) // S'assurer que le missile est en vol
-                .findFirst(); // Supposons qu'on ne gère qu'un missile à la fois
-
-        missile.ifPresent(m -> {
-            Logger.Information(this, "updateMissileTarget", "Updating trajectory for missile " + m.getId());
-            m.updateTarget(targetLastCoordinates);
-        });
-
+                .filter(Missile::isActive) // Ne prendre que les missiles en vol
+                .forEach(m -> {
+                    Logger.Information(this, "updateMissileTarget", "Updating trajectory for missile " + m.getId());
+                    m.updateTarget(targetLastCoordinates);
+                });
     }
+
 
 
     /**
