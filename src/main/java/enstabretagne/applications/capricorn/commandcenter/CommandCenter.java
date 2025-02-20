@@ -54,7 +54,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
                 .stream()
                 .map(e -> (Missile) e)
                 .min(Comparator
-                        .comparingDouble(m -> ((Missile)m).position().position().distance(this.targetLastCoordinates.position())) // Tri par distance
+                        .comparingDouble(m -> ((Missile)m).getPosition().position().distance(this.targetLastCoordinates.position())) // Tri par distance
                         .thenComparingInt(m -> ((Missile)m).getId()).reversed()); // ID le plus élevé en cas d'égalité
 
         // Si une tourelle est trouvée, planifier le tir
@@ -80,7 +80,16 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * Bases the update on the coordinates returned by the listener on the radar
      */
     public void updateMissileTrajectory(){
-        // todo: implement
+        Optional<Missile> missile = this.engine.recherche(e -> e instanceof Missile)
+                .stream()
+                .map(e -> (Missile) e)
+                .filter(Missile::isActive) // S'assurer que le missile est en vol
+                .findFirst(); // Supposons qu'on ne gère qu'un missile à la fois
+
+        missile.ifPresent(m -> {
+            Logger.Information(this, "updateMissileTarget", "Updating trajectory for missile " + m.getId());
+            m.updateTarget(targetLastCoordinates);
+        });
 
     }
 

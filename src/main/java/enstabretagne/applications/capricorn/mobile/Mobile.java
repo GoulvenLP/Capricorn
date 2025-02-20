@@ -43,12 +43,12 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 
 
 	@Override
-	public Location position() {
+	public Location getPosition() {
 		return p;
 	}
 
 	public void move() {
-		Logger.Information(this, "bonjour", "Bonjour Position :" + position());
+		Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
 		p=p.add(Vector2D.of(10 * this.speed/200,0));
 	}
 	@Override

@@ -16,17 +16,21 @@ import java.beans.PropertyChangeSupport;
 public class Missile extends EntiteSimulee implements ILocatable {
 
     Location position;
-
     public final MissileInit ini;
-    private PropertyChangeSupport pcs;
-    private int range;
+    private final PropertyChangeSupport pcs;
+    private final int range;
     private double probaFail;
     private double speed;
     SimEvent Move;
     private boolean embeddedRadarActivated;
 
+    private boolean isActive;
+
+    private Location target;
+
     public Missile(SimuEngine engine, InitData ini, CommandCenter commandCenter) {
         super(engine, ini);
+        this.isActive = false;
         this.ini = (MissileInit) ini;
         this.range = 10;
         this.pcs = new PropertyChangeSupport(this);
@@ -43,19 +47,25 @@ public class Missile extends EntiteSimulee implements ILocatable {
     }
 
     public void Fire(Location target) {
-        Move = new SimEvent(engine.Now()) {
+        this.target = target;
+        this.isActive = true;
+        this.Move = new SimEvent(engine.Now()) {
             @Override
             public void process() {
-                move(target);
+                move(Missile.this.target); // très important, on utilise les coords de la cible mises à jour
                 Move.rescheduleAt(Now().add(Missile.this.ini.period));
                 Post(Move);
             }
         };
-        Post(Move);
+        Post(this.Move);
+    }
+
+    public void updateTarget(Location newTarget) {
+        this.target = newTarget; // Mise à jour de la cible
+        Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new target");
     }
 
     private void move(Location target) {
-        // Calcul du vecteur direction vers la cible
         if (!this.embeddedRadarActivated){
             this.embeddedRadarActivated = isEmbeddedRadarRelaying(target);
             if (this.embeddedRadarActivated){
@@ -65,19 +75,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
             }
         }
         Vector2D direction = target.position().subtract(position.position()).normalize().multiply(this.speed/150); // 10 = vitesse du missile
-        // todo: adapt the move to the timer? (n seconds, ms...)
-
         // Mise à jour de la position du missile
         position = position.add(direction);
-    }
-
-    public Integer getId() {
-        return ini.id;
-    }
-
-    @Override
-    public Location position() {
-        return position;
     }
 
     /**
@@ -89,6 +88,19 @@ public class Missile extends EntiteSimulee implements ILocatable {
     public boolean isEmbeddedRadarRelaying(Location target){
         Logger.Information(this, "checking", target.position().distance(position.position()) + ""); //todo adjust
         return this.range >= target.position().distance(position.position());
+    }
+
+    public Integer getId() {
+        return ini.id;
+    }
+
+    @Override
+    public Location getPosition() {
+        return position;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
 

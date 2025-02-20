@@ -22,12 +22,12 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 }
 
 	public void convMobile(Mobile m) {
-		drawCircle(true,Layers.Objects , m.position().position().getX(),m.position().position().getY(), 5, Color.BLUE, m.ini.name);
+		drawCircle(true,Layers.Objects , m.getPosition().position().getX(),m.getPosition().position().getY(), 5, Color.BLUE, m.ini.name);
 
 	}
 		public void convRadar(Radar r) {
-		drawCircle(true,Layers.Objects , r.position().position().getX(),r.position().position().getY(), 5, Color.AQUA, r.rIni.name);
-		drawCircle(false,Layers.Objects , r.position().position().getX(),r.position().position().getY(), r.rIni.portee*2, Color.AQUA, "");
+		drawCircle(true,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), 5, Color.AQUA, r.rIni.name);
+		drawCircle(false,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), r.rIni.portee*2, Color.AQUA, "");
 	}
 
 	public void convEnv(Environement env) {
@@ -36,7 +36,7 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 
 	public void convMissile(Missile m) {
-		drawCircle(true,Layers.Objects , m.position().position().getX(),m.position().position().getY(), 8, Color.RED, m.ini.name);
+		drawCircle(true,Layers.Objects , m.getPosition().position().getX(),m.getPosition().position().getY(), 8, Color.RED, m.ini.name);
 	}
 
 	//

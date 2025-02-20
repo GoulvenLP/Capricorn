@@ -40,7 +40,7 @@ public class Radar extends EntiteSimulee implements ILocatable {
 	}
 
 	@Override
-	public Location position() {
+	public Location getPosition() {
 		return rIni.position;
 	}
 
