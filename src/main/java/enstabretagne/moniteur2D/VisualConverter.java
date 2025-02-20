@@ -2,6 +2,7 @@ package enstabretagne.moniteur2D;
 
 import java.util.HashMap;
 
+import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.SimuEngine;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -86,7 +87,9 @@ public abstract class VisualConverter {
 
 		for(var e:engine.mesEntitesSimulees)
 		{
-			convert(e);
+			if(e.getEtat() != EntiteSimulee.EtatEntite.DEAD){
+				convert(e);
+			};
 		}
 	}
 

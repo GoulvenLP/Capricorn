@@ -12,10 +12,10 @@ public abstract class EntiteSimulee {
 	protected SimuEngine engine;
 	private InitData ini;
 
-	enum EtatEntite {NONE,INITIALIZED,DEAD};
+	public enum EtatEntite {NONE,INITIALIZED,DEAD};
 	//etat de l'entite
 	private EtatEntite etat;
-	protected EtatEntite getEtat() {
+	public EtatEntite getEtat() {
 		return etat;
 	}
 
