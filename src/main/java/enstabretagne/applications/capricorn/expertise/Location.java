@@ -7,4 +7,6 @@ public record Location(String nom,Vector2D position) {
 	public Location add(Vector2D delta) {
 		return new Location(nom,position.add(delta));
 	}
+
+	public String getName(){ return this.nom; }
 }

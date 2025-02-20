@@ -5,4 +5,5 @@ public abstract class InitData {
 	public InitData(String name) {
 		this.name=name;
 	}
+
 }

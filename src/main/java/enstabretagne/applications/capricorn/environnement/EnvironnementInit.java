@@ -23,4 +23,12 @@ public class EnvironnementInit extends InitData{
 		positions.add(l);
 		return l;
 	}
+
+	public void removePosition(String nom){
+		for (Location p : this.positions){
+			if (p.getName().equals(nom)){
+				this.positions.remove((p));
+			}
+		}
+	}
 }

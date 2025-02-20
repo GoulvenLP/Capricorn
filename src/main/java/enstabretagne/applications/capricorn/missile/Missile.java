@@ -13,6 +13,7 @@ import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Random;
 
 public class Missile extends EntiteSimulee implements ILocatable {
 
@@ -56,8 +57,10 @@ public class Missile extends EntiteSimulee implements ILocatable {
             public void process() {
                 move(Missile.this.target); // très important, on utilise les coords de la cible mises à jour
                 checkImpact();
-                Move.rescheduleAt(Now().add(Missile.this.ini.period));
-                Post(Move);
+                if (Move != null){
+                    Move.rescheduleAt(Now().add(Missile.this.ini.period));
+                    Post(Move);
+                }
             }
         };
         Post(this.Move);
@@ -89,6 +92,27 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.position = this.position.add(direction);
     }
 
+    /**
+     * According to the probability of the missile to destroy a target,
+     * generates a random number.
+     * @return true if the random number generated is superior to the failure treshold
+     * else returns false
+     */
+    private boolean isDestroyingTarget(){
+        boolean status = false;
+        Random r = new Random();
+        int val = r.nextInt(101);
+        if (val > this.probaFail * 10){
+            status = true;
+        }
+        return status;
+    }
+
+    private void destroyMissile(){
+        unPost(this.Move);
+        this.Move = null;
+    }
+
     private void checkImpact() {
         // get the Mobile
         this.engine.recherche(e -> {
@@ -98,8 +122,11 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;
                     terminate();
-                    unPost(Move);
-                    m.explode();
+                    if (isDestroyingTarget()){
+                        m.explode();
+                    }
+                    destroyMissile();
+                    this.pcs.firePropertyChange("missile_exploded", null, null);
 
                 }
             }

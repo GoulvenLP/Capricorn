@@ -103,9 +103,19 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
             this.action();
         } else if (evt.getPropertyName().equals("switchingRadar")) {
             this.radarMode = Sensor.MISSILE;
+        } else if (evt.getPropertyName().equals("missile_exploded")) {
+            this.resetCommandCenter();
         }
     }
 
+    /**
+     * Resets the command center variables
+     */
+    public void resetCommandCenter(){
+        this.firedMissile = false;
+        this.targetLastCoordinates = null;
+        this.radarMode = Sensor.COMMAND_CENTER;
+    }
 
 
 }
