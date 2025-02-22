@@ -67,7 +67,7 @@ public class PlanSimple extends Plan{
 					
 					for(int n =0;n<getNbReplique();n++) {
 						ScenarioSimpleInit ini = new ScenarioSimpleInit(
-								"CAPRICORN i="+i + " j=" + n + " k="+k +" N="+n, 
+								"CAPRICORN v="+i + " n="+j + " d="+k +" r="+n,
 								n,
 								n,///utilisation de n comme graine
 								start,

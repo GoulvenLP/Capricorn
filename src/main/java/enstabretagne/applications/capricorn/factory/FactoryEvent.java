@@ -1,14 +1,11 @@
 package enstabretagne.applications.capricorn.factory;
 
-import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.mobile.Mobile;
-import enstabretagne.applications.capricorn.radar.Radar;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.SimEvent;
 
-import java.util.List;
 
 public class FactoryEvent extends SimEvent {
 
@@ -22,7 +19,6 @@ public class FactoryEvent extends SimEvent {
     }
 
     private Boolean isMobileCrashed(Mobile m) {
-        FactoryInit factoryInit = (FactoryInit) entitePorteuseEvenement.getInit();
         return m.isObjectiveReached();
     }
 
@@ -30,13 +26,19 @@ public class FactoryEvent extends SimEvent {
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
         // predicat pour vérifier qu'un mobile a atteint l'usine et qu'il n'a pas manqué sa cible
-        boolean isFactoryImpacted = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                isMobileOnFactory((Mobile) e) && isMobileCrashed((Mobile) e))
+        boolean isMobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
+                isMobileOnFactory((Mobile) e))
                 .stream()
                 .findFirst()
                 .isPresent();
 
-        if(isFactoryImpacted){
+        boolean hasMobileCrashed = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
+                        isMobileCrashed((Mobile) e))
+                .stream()
+                .findFirst()
+                .isPresent();
+
+        if(isMobileAbove && hasMobileCrashed){
             Logger.Information(entitePorteuseEvenement, "FactoryEvent.Process", "Usine touchée par un mobile");
             ((Factory) entitePorteuseEvenement).explode();
         }

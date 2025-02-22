@@ -63,7 +63,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     Post(Move);
                 }
-                if (Missile.this.previousCoordinates == Missile.this.target){
+                if (Missile.this.target.equals(Missile.this.previousCoordinates)){
                     destroyMissile();
                 } else {
                     Missile.this.previousCoordinates = Missile.this.target;
@@ -74,7 +74,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
     }
 
     public void updateTarget(Location newTarget) {
-        if (this.target.position().getX() == newTarget.position().getY() && this.target.position().getY() == newTarget.position().getY()){ // target reached it's objective --> coordinates remain constant
+        // target reached its objective --> coordinates remain constant
+        if (this.target.equals(newTarget)){
             this.destroyMissile();
         }
         this.target = newTarget; // Mise à jour de la cible
@@ -128,12 +129,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
         // get the Mobile
         this.engine.recherche(e -> {
             if (e instanceof Mobile) {
-                Mobile m = (Mobile) e;
-                if (m.getPosition().position().distance(this.position.position()) <= 5) {
+                Mobile mobile = (Mobile) e;
+                if (mobile.getPosition().position().distance(this.position.position()) <= 5) {
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;
                     if (isDestroyingTarget()){
-                        m.explode();
+                        mobile.explode();
                     }
                     destroyMissile();
                     this.pcs.firePropertyChange("missile_exploded", null, null);

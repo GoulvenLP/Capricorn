@@ -52,8 +52,11 @@ public class ScenarioSimple extends SimuScenario{
 		var p4 = envIni.addPosition("P4", Vector2D.of(base_distance*scaleX, 20*scaleY));
 
 		//var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
-		var cesna_1 = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
-		var cesna_2 = envIni.addPosition("cesna", Vector2D.of(10*scaleX, 0*scaleY));
+		var cesna_1 = envIni.addPosition("cesna1", Vector2D.of(0*scaleX, 10*scaleY));
+		var cesna_2 = envIni.addPosition("cesna2", Vector2D.of(10*scaleX, 0*scaleY));
+		var cesna_3 = envIni.addPosition("cesna3", Vector2D.of(5*scaleX, 5*scaleY));
+		var cesna_4 = envIni.addPosition("cesna4", Vector2D.of(2.5*scaleX, 2.5*scaleY));
+		var cesna_5 = envIni.addPosition("cesna5", Vector2D.of(7.5*scaleX, 7.5*scaleY));
 		var env = new Environement(engine, envIni);
 
 		// period: period of the "scan" rescheduling
@@ -77,6 +80,9 @@ public class ScenarioSimple extends SimuScenario{
 		// Cessna - the target point is the factory
 		var iniCessna1 = new MobileInit("C1",cesna_1,LogicalDuration.ofSeconds(1), factory);
 		var iniCessna2 = new MobileInit("C2",cesna_2,LogicalDuration.ofSeconds(1), factory);
+		var iniCessna3 = new MobileInit("C3",cesna_3,LogicalDuration.ofSeconds(1), factory);
+		var iniCessna4 = new MobileInit("C4",cesna_4,LogicalDuration.ofSeconds(1), factory);
+		var iniCessna5 = new MobileInit("C5",cesna_5,LogicalDuration.ofSeconds(1), factory);
 
 		var cc = new CommandCenter(engine, iniCC);
 
@@ -90,10 +96,24 @@ public class ScenarioSimple extends SimuScenario{
 		new Missile(engine,iniM2, cc);
 		new Missile(engine,iniM3, cc);
 		new Missile(engine,iniM4, cc);
-		
-		new Mobile(engine,iniCessna1, this.ini.getSpeed());
-		new Mobile(engine,iniCessna2, this.ini.getSpeed());
 
+		// Mobiles: declare always 3 (minimal number for the simulation)
+		double speed = this.ini.getSpeed();
+		new Mobile(engine,iniCessna1, speed);
+		new Mobile(engine,iniCessna2, speed);
+		new Mobile(engine,iniCessna3, speed);
+
+		switch (this.ini.getNbCessna()) {
+			case 4:
+				new Mobile(engine, iniCessna4, this.ini.getSpeed());
+				break;
+			case 5: // maximal number for the simulation
+				new Mobile(engine, iniCessna4, this.ini.getSpeed());
+				new Mobile(engine, iniCessna5, this.ini.getSpeed());
+				break;
+			default:
+				//do nothing
+		}
 	}
 
 }
