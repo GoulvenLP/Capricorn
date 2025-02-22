@@ -9,6 +9,7 @@ import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
+import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -107,6 +108,8 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
                 activeMissiles.put(missile, newTarget);
             }
         });
+
+
     }
 
 
@@ -117,9 +120,16 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      */
     public void propertyChange(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("mobile")) {
-            this.targetLastCoordinates = new ArrayList<>((List<Location>) evt.getNewValue());
-            System.out.println(this.targetLastCoordinates);
-            this.action();
+            if(evt.getNewValue() != null) {
+                this.targetLastCoordinates = new ArrayList<>((List<Location>) evt.getNewValue());
+                System.out.println(this.targetLastCoordinates);
+                this.action();
+            }else{
+                Location explosionLocation = new Location("safeExplosionPlace", Vector2D.of(0, 0));
+                this.targetLastCoordinates = List.of(explosionLocation);
+                this.action();
+            }
+
         } else if (evt.getPropertyName().equals("switchingRadar")) {
             this.radarMode = Sensor.MISSILE;
         } else if (evt.getPropertyName().equals("missile_exploded")) {

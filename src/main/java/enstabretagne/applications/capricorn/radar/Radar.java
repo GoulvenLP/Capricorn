@@ -49,6 +49,11 @@ public class Radar extends EntiteSimulee implements ILocatable {
 		this.pcs.firePropertyChange(new PropertyChangeEvent(this, "mobile", null, l));
 	}
 
+	public void explodeExistingMissile() {
+		Logger.Information(this, "explodeExistingMissile", "Exploding existing missile");
+		this.pcs.firePropertyChange(new PropertyChangeEvent(this, "missile", null, null));
+	}
+
 	@Override
 	public Location getPosition() {
 		return rIni.position;

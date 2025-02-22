@@ -39,6 +39,7 @@ public class RadarEvent extends SimEvent {
             ((Radar)entitePorteuseEvenement).setTargetsDetected(true);
         }else{
             ((Radar)entitePorteuseEvenement).setTargetsDetected(false);
+            ((Radar) entitePorteuseEvenement).explodeExistingMissile();
         }
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);
