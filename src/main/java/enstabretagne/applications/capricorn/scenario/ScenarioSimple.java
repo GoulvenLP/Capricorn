@@ -99,17 +99,33 @@ public class ScenarioSimple extends SimuScenario{
 
 		// Mobiles: declare always 3 (minimal number for the simulation)
 		double speed = this.ini.getSpeed();
-		new Mobile(engine,iniCessna1, speed);
-		new Mobile(engine,iniCessna2, speed);
-		new Mobile(engine,iniCessna3, speed);
+
 
 		switch (this.ini.getNbCessna()) {
+			case 1:
+				new Mobile(engine,iniCessna1, speed);
+				break;
+			case 2:
+				new Mobile(engine,iniCessna1, speed);
+				new Mobile(engine,iniCessna2, speed);
+				break;
+			case 3:
+				new Mobile(engine,iniCessna1, speed);
+				new Mobile(engine,iniCessna2, speed);
+				new Mobile(engine,iniCessna3, speed);
+				break;
 			case 4:
+				new Mobile(engine,iniCessna1, speed);
+				new Mobile(engine,iniCessna2, speed);
+				new Mobile(engine,iniCessna3, speed);
 				new Mobile(engine, iniCessna4, this.ini.getSpeed());
 				break;
 			case 5: // maximal number for the simulation
-				new Mobile(engine, iniCessna4, this.ini.getSpeed());
-				new Mobile(engine, iniCessna5, this.ini.getSpeed());
+				new Mobile(engine,iniCessna1, speed);
+				new Mobile(engine,iniCessna2, speed);
+				new Mobile(engine,iniCessna3, speed);
+				new Mobile(engine, iniCessna4, speed);
+				new Mobile(engine, iniCessna5, speed);
 				break;
 			default:
 				//do nothing
