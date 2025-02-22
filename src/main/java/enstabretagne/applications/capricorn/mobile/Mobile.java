@@ -11,6 +11,7 @@ import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * The type Mobile.
@@ -49,6 +50,14 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 			@Override
 			public void process() {
 				if(isOnFactory()) {
+					Random rand = new Random();
+					int proba = rand.nextInt(101);
+					if (proba <= probaFail){
+						Logger.Information(this, "explode", "Cessna missied the factory");
+					} else {
+						Logger.Information(this, "explode", "Factory destroyed");
+
+					}
 					explode();
 				}else{
 					move();
