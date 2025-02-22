@@ -32,6 +32,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	SimEvent Move;
 	private double speed;
 	private double probaFail;
+	private boolean reachedObjective;
 
 	/**
 	 * Instantiates a new Mobile.
@@ -45,6 +46,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		this.ini = (MobileInit) ini;
 		this.speed = speed;
 		this.probaFail = 0.1;
+		this.reachedObjective = false;
 
 		Move = new SimEvent(engine.Now()) {
 			@Override
@@ -56,6 +58,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 						Logger.Information(this, "explode", "Cessna missied the factory");
 					} else {
 						Logger.Information(this, "explode", "Factory destroyed");
+						reachedObjective = true;
 
 					}
 					explode();
@@ -66,6 +69,16 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 				Post(Move);
 			}
 		};
+	}
+
+	/**
+	 * Specifies if the target got reached by the mobile.
+	 * This depends on the fact that the mobile's coordinates correspond
+	 * to the target coordinates and that the mobile got a successful random number.
+	 * @return true if the mobile reached its objective, else false
+	 */
+	public boolean isObjectiveReached(){
+		return this.reachedObjective;
 	}
 
 	/**

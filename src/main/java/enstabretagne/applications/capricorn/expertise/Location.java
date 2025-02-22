@@ -9,4 +9,5 @@ public record Location(String nom,Vector2D position) {
 	}
 
 	public String getName(){ return this.nom; }
+
 }

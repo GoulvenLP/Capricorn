@@ -23,7 +23,7 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 
 	public void convFactory(Factory f) {
-		if(f.isExplosed()) {
+		if(f.isExploded()) {
 			drawCircle(true, Layers.Objects, f.getPosition().position().getX(), f.getPosition().position().getY(), 5, Color.RED, f.ini.name);
 			writeText(Layers.Objects, f.getPosition().position().getX() + 30, f.getPosition().position().getY(), Color.RED, "Factory Damaged !");
 		}else{
@@ -52,7 +52,13 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 
 	public void convMissile(Missile m) {
-		drawCircle(true,Layers.Objects , m.getPosition().position().getX(),m.getPosition().position().getY(), 8, Color.RED, m.ini.name);
+		Color c;
+		if (m.isEmbeddedRadarActivated()){
+			c = Color.ORANGE;
+		} else {
+			c = Color.RED;
+		}
+		drawCircle(true,Layers.Objects , m.getPosition().position().getX(),m.getPosition().position().getY(), 8, c, m.ini.name);
 	}
 
 	//

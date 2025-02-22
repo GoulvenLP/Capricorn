@@ -26,7 +26,7 @@ public class FactoryEvent extends SimEvent {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
         // predicat pour vérifier qu'un mobile est à un certaine position du radar
         boolean mobileOnFactory = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                isMobileOnFactory((Mobile) e))
+                isMobileOnFactory((Mobile) e) && ((Mobile) e).isObjectiveReached())
                 .stream()
                 .findFirst()
                 .isPresent();

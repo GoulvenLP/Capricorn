@@ -18,6 +18,8 @@ import java.util.Random;
 public class Missile extends EntiteSimulee implements ILocatable {
 
     Location position;
+    private Location target;
+    private Location previousCoordinates;
     public final MissileInit ini;
     private final PropertyChangeSupport pcs;
     private final int range;
@@ -28,7 +30,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     private boolean isActive;
 
-    private Location target;
 
     public Missile(SimuEngine engine, InitData ini, CommandCenter commandCenter) {
         super(engine, ini);
@@ -38,6 +39,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.probaFail = 0.1;
         this.speed = 1500;
         this.embeddedRadarActivated = false;
+        this.previousCoordinates = null;
 
         this.pcs = new PropertyChangeSupport(this);
         this.pcs.addPropertyChangeListener(commandCenter);
@@ -61,12 +63,20 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     Post(Move);
                 }
+                if (Missile.this.previousCoordinates == Missile.this.target){
+                    destroyMissile();
+                } else {
+                    Missile.this.previousCoordinates = Missile.this.target;
+                }
             }
         };
         Post(this.Move);
     }
 
     public void updateTarget(Location newTarget) {
+        if (this.target.position().getX() == newTarget.position().getY() && this.target.position().getY() == newTarget.position().getY()){ // target reached it's objective --> coordinates remain constant
+            this.destroyMissile();
+        }
         this.target = newTarget; // Mise à jour de la cible
         Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new target");
     }
@@ -146,6 +156,15 @@ public class Missile extends EntiteSimulee implements ILocatable {
     public boolean isEmbeddedRadarRelaying(Location target){
         Logger.Information(this, "isEmbeddedRadarRelaying", "Checking if target is in radar range");
         return this.range >= target.position().distance(position.position());
+    }
+
+
+    /**
+     * Getter on the variable that displays if the embedded radar is currently activated or not
+     * @return true if the embedded radar is activated, else false
+     */
+    public boolean isEmbeddedRadarActivated(){
+        return this.embeddedRadarActivated;
     }
 
 

@@ -106,6 +106,8 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
                 Location newTarget = closestTarget.get();
                 missile.updateTarget(newTarget);
                 activeMissiles.put(missile, newTarget);
+            } else { // no more targets around but the missile is still in the air: destroy it
+                missile.destroyMissile();
             }
         });
 

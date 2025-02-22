@@ -14,14 +14,14 @@ public class Factory extends EntiteSimulee implements ILocatable {
 
     SimEvent FactoryEvent;
 
-    private boolean isExplosed;
+    private boolean isExploded;
 
     public final FactoryInit ini;
     public Factory(SimuEngine engine, InitData ini) {
         super(engine, ini);
         this.ini = (FactoryInit) ini;
         this.FactoryEvent = new FactoryEvent(engine.Now());
-        this.isExplosed = false;
+        this.isExploded = false;
     }
 
     @Override
@@ -43,12 +43,12 @@ public class Factory extends EntiteSimulee implements ILocatable {
         return this.position;
     }
 
-    public boolean isExplosed() {
-        return isExplosed;
+    public boolean isExploded() {
+        return isExploded;
     }
 
     public void setExplosed(boolean explosed) {
-        isExplosed = explosed;
+        isExploded = explosed;
     }
 }
 
