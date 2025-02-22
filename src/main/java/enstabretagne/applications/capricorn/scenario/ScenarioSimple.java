@@ -2,6 +2,7 @@ package enstabretagne.applications.capricorn.scenario;
 
 import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.applications.capricorn.commandcenter.CommandCenterInit;
+import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.factory.Factory;
 import enstabretagne.applications.capricorn.factory.FactoryInit;
 import enstabretagne.applications.capricorn.missile.Missile;
@@ -40,8 +41,8 @@ public class ScenarioSimple extends SimuScenario{
 
 		super.Init();
 		var envIni = new EnvironnementInit("Env");
-		var factory = envIni.addPosition("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
-
+		//var factory = envIni.addPosition("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
+		var factory = new Location("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
 		var radar = envIni.addPosition("Radar", Vector2D.of((base_distance+30)*scaleX, 10*scaleY));
 		var p1 = envIni.addPosition("P1", Vector2D.of(base_distance*scaleX, 0*scaleY));
 		var p2 = envIni.addPosition("P2", Vector2D.of((base_distance+30)*scaleX, 2*scaleY));
@@ -56,7 +57,7 @@ public class ScenarioSimple extends SimuScenario{
 		// period: period of the "scan" rescheduling
 
 		// Factory
-		var iniF = new FactoryInit("Factory",factory);
+		var iniF = new FactoryInit("Factory",new Location("Factory",factory.position()));
 
 		// Missiles (init)
 		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);

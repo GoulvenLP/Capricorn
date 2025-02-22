@@ -2,6 +2,7 @@ package enstabretagne.applications.capricorn.commandcenter;
 
 import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.missile.Missile;
+import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.EntiteSimulee;
@@ -11,18 +12,18 @@ import enstabretagne.engine.SimuEngine;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 
 public class CommandCenter extends EntiteSimulee implements PropertyChangeListener {
     private enum Sensor { COMMAND_CENTER, MISSILE}; // source of the radar used to detect the target
-    private Location targetLastCoordinates; // coordinates used to target a detected engine
-    private boolean firedMissile; // true if a missile got already shot
+    private List<Location> targetLastCoordinates; // coordinates used to target a detected engine
     private Sensor radarMode;
+    private final Map<Missile, Location> activeMissiles;
+
 
     public CommandCenter(SimuEngine engine, InitData init){
         super(engine, init);
-        this.firedMissile = false;
+        this.activeMissiles = new HashMap<>();
         this.targetLastCoordinates = null;
         this.radarMode = Sensor.COMMAND_CENTER;
     }
@@ -31,14 +32,29 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * Typical action of the command center when the radar detects something: it schedules a missile,
      * or updates its trajectory if a missile got already shot.
      */
-    public void action(){
-        Logger.Information(this, "action", "Command Center action");
-        if (!this.firedMissile){
-            Logger.Information(this, "action", "Missile fired");
-            scheduleFireMissile();
-        } else {
-            updateMissileTrajectory();
+    public void action() {
+        // Récupérer les cibles actuellement suivies
+        Set<Location> assignedTargets = new HashSet<>(activeMissiles.values());
+
+        // Identifier les nouvelles cibles (mobiles non encore assignés)
+        List<Location> newTargets = targetLastCoordinates.stream()
+                .filter(target -> !assignedTargets.contains(target))
+                .toList();
+
+        // Déterminer combien de missiles supplémentaires sont nécessaires
+        int activeMissilesCount = activeMissiles.size();
+        int targetsCount = targetLastCoordinates.size();
+        int missilesManquants = targetsCount - activeMissilesCount;
+
+        Logger.Detail(this, "action", "Missiles actifs : " + activeMissilesCount + ", Cibles : " + targetsCount + ", Missiles à tirer : " + missilesManquants);
+
+        // Tirer seulement le nombre nécessaire de missiles
+        for (int i = 0; i < missilesManquants && i < newTargets.size(); i++) {
+            scheduleFireMissile(newTargets.get(i));
         }
+
+        // Mise à jour des trajectoires des missiles existants
+        updateMissileTrajectory();
     }
 
 
@@ -46,32 +62,31 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * Programs a missile in the scheduler for two seconds later,
      * sets the class variable firedMissile to true
      */
-    public void scheduleFireMissile() {
-        this.firedMissile = true;
-
-        // Trouver la tourelle la plus proche
-        Optional<Missile> closestTurret = this.engine.recherche(e -> e instanceof Missile)
+    public void scheduleFireMissile(Location target) {
+        Optional<Missile> availableMissile = this.engine.recherche(e -> e instanceof Missile)
                 .stream()
                 .map(e -> (Missile) e)
-                .min(Comparator
-                        .comparingDouble(m -> ((Missile)m).getPosition().position().distance(this.targetLastCoordinates.position())) // Tri par distance
-                        .thenComparingInt(m -> ((Missile)m).getId()).reversed()); // ID le plus élevé en cas d'égalité
+                .filter(m -> !activeMissiles.containsKey(m)) // Ne prendre que les missiles inactifs
+                .min(Comparator.comparingDouble(m -> m.getPosition().position().distance(target.position())));
 
-        // Si une tourelle est trouvée, planifier le tir
-        closestTurret.ifPresent(turret -> {
-            Logger.Detail(this, "scheduleFireMissile", "Tourelle la plus proche : " + turret.getId());
+        if (availableMissile.isEmpty()) {
+            Logger.Warning(this, "scheduleFireMissile", "Aucun missile disponible pour suivre la cible.");
+            return;
+        }
 
-            // Planifier le tir après 2 secondes
-            SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
-                @Override
-                public void process() {
-                    turret.Fire(targetLastCoordinates);
-                }
-            };
-            super.Post(fireMissile);
-        });
+        Missile missile = availableMissile.get();
+        Logger.Detail(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné à la cible.");
+
+        // Planifier le tir après 2 secondes
+        SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
+            @Override
+            public void process() {
+                missile.Fire(target);
+                activeMissiles.put(missile, target); // Associer le missile à la cible
+            }
+        };
+        super.Post(fireMissile);
     }
-
 
 
     /**
@@ -80,16 +95,19 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * Bases the update on the coordinates returned by the listener on the radar
      */
     public void updateMissileTrajectory() {
-        this.engine.recherche(e -> e instanceof Missile)
-                .stream()
-                .map(e -> (Missile) e)
-                .filter(Missile::isActive) // Ne prendre que les missiles en vol
-                .forEach(m -> {
-                    Logger.Information(this, "updateMissileTarget", "Updating trajectory for missile " + m.getId());
-                    m.updateTarget(targetLastCoordinates);
-                });
-    }
+        Logger.Information(this, "updateMissileTrajectory", "Mise à jour des trajectoires des missiles.");
 
+        activeMissiles.forEach((missile, currentTarget) -> {
+            Optional<Location> closestTarget = targetLastCoordinates.stream()
+                    .min(Comparator.comparingDouble(t -> t.position().distance(missile.getPosition().position())));
+
+            if (closestTarget.isPresent()) {
+                Location newTarget = closestTarget.get();
+                missile.updateTarget(newTarget);
+                activeMissiles.put(missile, newTarget);
+            }
+        });
+    }
 
 
     /**
@@ -99,20 +117,26 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      */
     public void propertyChange(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("mobile")) {
-            this.targetLastCoordinates = (Location) evt.getNewValue();
+            this.targetLastCoordinates = new ArrayList<>((List<Location>) evt.getNewValue());
+            System.out.println(this.targetLastCoordinates);
             this.action();
         } else if (evt.getPropertyName().equals("switchingRadar")) {
             this.radarMode = Sensor.MISSILE;
         } else if (evt.getPropertyName().equals("missile_exploded")) {
-            this.resetCommandCenter();
+            Missile explodedMissile = (Missile) evt.getNewValue();
+            activeMissiles.remove(explodedMissile);
+
+            if (activeMissiles.isEmpty()) {
+                resetCommandCenter();
+            }
         }
     }
 
     /**
      * Resets the command center variables
      */
-    public void resetCommandCenter(){
-        this.firedMissile = false;
+    public void resetCommandCenter() {
+        this.activeMissiles.clear();
         this.targetLastCoordinates = null;
         this.radarMode = Sensor.COMMAND_CENTER;
     }

@@ -108,8 +108,9 @@ public class Missile extends EntiteSimulee implements ILocatable {
         return status;
     }
 
-    private void destroyMissile(){
+    public void destroyMissile(){
         unPost(this.Move);
+        terminate();
         this.Move = null;
     }
 
@@ -121,7 +122,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
                 if (m.getPosition().position().distance(this.position.position()) <= 5) {
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;
-                    terminate();
                     if (isDestroyingTarget()){
                         m.explode();
                     }

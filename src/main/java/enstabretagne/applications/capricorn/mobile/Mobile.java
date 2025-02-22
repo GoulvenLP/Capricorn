@@ -10,14 +10,35 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 
+import java.util.Objects;
+
+/**
+ * The type Mobile.
+ */
 public class Mobile extends EntiteSimulee implements ILocatable{
 
+	/**
+	 * The Ini.
+	 */
 	public final MobileInit ini;
+	/**
+	 * The P.
+	 */
 	Location p;
+	/**
+	 * The Move.
+	 */
 	SimEvent Move;
 	private double speed;
 	private double probaFail;
 
+	/**
+	 * Instantiates a new Mobile.
+	 *
+	 * @param engine the engine
+	 * @param ini    the ini
+	 * @param speed  the speed
+	 */
 	public Mobile(SimuEngine engine, InitData ini, double speed) {
 		super(engine, ini);
 		this.ini = (MobileInit) ini;
@@ -27,17 +48,29 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		Move = new SimEvent(engine.Now()) {
 			@Override
 			public void process() {
-				move();
+				if(isOnFactory()) {
+					explode();
+				}else{
+					move();
+				}
 				Move.rescheduleAt(Now().add(Mobile.this.ini.period));
 				Post(Move);
 			}
 		};
 	}
 
+	/**
+	 * Explode.
+	 */
 	public void explode() {
 		Logger.Information(this, "explode", "Explosion Position :" + getPosition());
 		unPost(Move);
 		terminate();
+	}
+
+
+	protected boolean isOnFactory() {
+		return Objects.equals(ini.direction.position().subtract(getPosition().position()), Vector2D.of(0, 0));
 	}
 
 	@Override
@@ -47,18 +80,19 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		Post(Move);
 	}
 
-
 	@Override
 	public Location getPosition() {
 		return p;
 	}
 
+	/**
+	 * Move.
+	 */
 	public void move() {
 		Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
 		Vector2D direction = ini.direction.position().subtract(this.getPosition().position())
 				.normalize()
 				.multiply(10*this.speed / 200);
-
 		p=p.add(direction);
 	}
 	@Override

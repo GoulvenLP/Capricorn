@@ -11,21 +11,25 @@ import enstabretagne.engine.SimuEngine;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 
 public class Radar extends EntiteSimulee implements ILocatable {
 
 	public final RadarInit rIni;
 
 	SimEvent RadarEvent;
-	private PropertyChangeSupport pcs;
+	private final PropertyChangeSupport pcs;
+
+
+	private boolean isTargetsDetected;
 
 	public Radar(SimuEngine engine, InitData ini, CommandCenter commandCenter) {
 		super(engine, ini);
 		this.rIni = (RadarInit) ini;
-
 		this.RadarEvent = new RadarEvent(engine.Now());
 		this.pcs = new PropertyChangeSupport(this);
 		this.pcs.addPropertyChangeListener(commandCenter); // add listener
+		this.isTargetsDetected = false;
 	}
 
 	@Override
@@ -34,7 +38,13 @@ public class Radar extends EntiteSimulee implements ILocatable {
 		Post(this.RadarEvent);
 	}
 
-	public void alertCommandCenter(Location l) {
+
+	/**
+	 * Alert command center.
+	 *
+	 * @param l the list of targets location to alert the command center
+	 */
+	public void alertCommandCenter(List<Location> l) {
 		Logger.Information(this, "alertCommandCenter", "Alerting Command Center");
 		this.pcs.firePropertyChange(new PropertyChangeEvent(this, "mobile", null, l));
 	}
@@ -43,6 +53,15 @@ public class Radar extends EntiteSimulee implements ILocatable {
 	public Location getPosition() {
 		return rIni.position;
 	}
+
+	public boolean isTargetsDetected() {
+		return isTargetsDetected;
+	}
+
+	public void setTargetsDetected(boolean targetsDetected) {
+		isTargetsDetected = targetsDetected;
+	}
+
 
 
 

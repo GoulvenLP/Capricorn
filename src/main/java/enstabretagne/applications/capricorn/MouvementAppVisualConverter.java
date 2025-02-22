@@ -1,6 +1,5 @@
 package enstabretagne.applications.capricorn;
 
-
 import enstabretagne.applications.capricorn.environnement.Environement;
 import enstabretagne.applications.capricorn.factory.Factory;
 import enstabretagne.applications.capricorn.missile.Missile;
@@ -24,7 +23,12 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 
 	public void convFactory(Factory f) {
-		drawCircle(true, Layers.Objects, f.getPosition().position().getX(), f.getPosition().position().getY(), 5, Color.GREEN, f.ini.name);
+		if(f.isExplosed()) {
+			drawCircle(true, Layers.Objects, f.getPosition().position().getX(), f.getPosition().position().getY(), 5, Color.RED, f.ini.name);
+			writeText(Layers.Objects, f.getPosition().position().getX() + 30, f.getPosition().position().getY(), Color.RED, "Factory Damaged !");
+		}else{
+			drawCircle(true, Layers.Objects, f.getPosition().position().getX(), f.getPosition().position().getY(), 5, Color.GREEN, f.ini.name);
+		}
 	}
 
 	public void convMobile(Mobile m) {
@@ -32,8 +36,14 @@ public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.Visual
 	}
 
 	public void convRadar(Radar r) {
-		drawCircle(true,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), 5, Color.AQUA, r.rIni.name);
-		drawCircle(false,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), r.rIni.portee*2, Color.AQUA, "");
+		Color c;
+		if(r.isTargetsDetected()){
+			c = Color.RED;
+		}else{
+			c = Color.GREEN;
+		}
+		drawCircle(true,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), 5, c, r.rIni.name);
+		drawCircle(false,Layers.Objects , r.getPosition().position().getX(),r.getPosition().position().getY(), r.rIni.portee*2, c, "");
 	}
 
 	public void convEnv(Environement env) {
