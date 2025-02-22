@@ -20,6 +20,8 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimuEngine;
 import enstabretagne.engine.SimuScenario;
 
+import java.util.Random;
+
 public class ScenarioSimple extends SimuScenario{
 
 	private ScenarioSimpleInit ini;

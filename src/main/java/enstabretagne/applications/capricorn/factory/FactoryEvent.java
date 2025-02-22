@@ -21,16 +21,22 @@ public class FactoryEvent extends SimEvent {
         return m.getPosition().position().distance(factoryInit.position.position()) == 0;
     }
 
+    private Boolean isMobileCrashed(Mobile m) {
+        FactoryInit factoryInit = (FactoryInit) entitePorteuseEvenement.getInit();
+        return m.isObjectiveReached();
+    }
+
     @Override
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
-        // predicat pour vérifier qu'un mobile est à un certaine position du radar
-        boolean mobileOnFactory = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                isMobileOnFactory((Mobile) e) && ((Mobile) e).isObjectiveReached())
+        // predicat pour vérifier qu'un mobile a atteint l'usine et qu'il n'a pas manqué sa cible
+        boolean isFactoryImpacted = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
+                isMobileOnFactory((Mobile) e) && isMobileCrashed((Mobile) e))
                 .stream()
                 .findFirst()
                 .isPresent();
-        if(mobileOnFactory){
+
+        if(isFactoryImpacted){
             Logger.Information(entitePorteuseEvenement, "FactoryEvent.Process", "Usine touchée par un mobile");
             ((Factory) entitePorteuseEvenement).explode();
         }
