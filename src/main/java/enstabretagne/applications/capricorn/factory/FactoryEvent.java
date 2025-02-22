@@ -15,7 +15,7 @@ public class FactoryEvent extends SimEvent {
 
     private Boolean isMobileOnFactory(Mobile m) {
         FactoryInit factoryInit = (FactoryInit) entitePorteuseEvenement.getInit();
-        return m.getPosition().position().distance(factoryInit.position.position()) < 250; // rayon de l'usine
+        return m.isOnFactory();
     }
 
     private Boolean isMobileCrashed(Mobile m) {
@@ -26,19 +26,14 @@ public class FactoryEvent extends SimEvent {
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
         // predicat pour vérifier qu'un mobile a atteint l'usine et qu'il n'a pas manqué sa cible
+        // todo verify isMobileAbove --> is the scale right?
         boolean isMobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                isMobileOnFactory((Mobile) e))
+                isMobileOnFactory((Mobile) e) && isMobileCrashed((Mobile) e))
                 .stream()
                 .findFirst()
                 .isPresent();
 
-        boolean hasMobileCrashed = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                        isMobileCrashed((Mobile) e))
-                .stream()
-                .findFirst()
-                .isPresent();
-
-        if(isMobileAbove && hasMobileCrashed){
+        if(isMobileAbove){
             Logger.Information(entitePorteuseEvenement, "FactoryEvent.Process", "Usine touchée par un mobile");
             ((Factory) entitePorteuseEvenement).explode();
         }

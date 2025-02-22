@@ -19,7 +19,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     Location position;
     private Location target;
-    private Location previousCoordinates;
     public final MissileInit ini;
     private final PropertyChangeSupport pcs;
     private final int range;
@@ -39,7 +38,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.probaFail = 0.1;
         this.speed = 1500;
         this.embeddedRadarActivated = false;
-        this.previousCoordinates = null;
 
         this.pcs = new PropertyChangeSupport(this);
         this.pcs.addPropertyChangeListener(commandCenter);
@@ -63,12 +61,11 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     Post(Move);
                 }
-                if (Missile.this.previousCoordinates != null){ // Missile got shot
-                    if (Missile.this.target.position().distance(Missile.this.previousCoordinates.position()) < 5) { // Mobile's width
-                        destroyMissile();
-                    } else {
-                        Missile.this.previousCoordinates = Missile.this.target;
-                    }
+                // TODO ADJUST DISTANCE ?
+                if (Missile.this.target.position().distance(Missile.this.position.position()) < 5) { // Mobile reached       5 == Mobile's width
+                    destroyMissile();
+                } else if (Missile.this.target.position() == null) { // Mobile crashed
+                    destroyMissile();
                 }
             }
         };
@@ -99,7 +96,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Vector2D targetPos = target.position();
         Vector2D direction = targetPos.subtract(currentPos)
                 .normalize()
-                .multiply(this.speed / 150);
+                .multiply(this.speed / 150);    // todo right scale?
 
         // Mise à jour de la position du missile
         this.position = this.position.add(direction);
@@ -132,6 +129,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.engine.recherche(e -> {
             if (e instanceof Mobile) {
                 Mobile mobile = (Mobile) e;
+                // TODO VERIFY IF DISTANCE IS OK
                 if (mobile.getPosition().position().distance(this.position.position()) < 5) { // plane's radius is 10m
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;

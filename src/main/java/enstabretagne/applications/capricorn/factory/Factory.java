@@ -35,7 +35,7 @@ public class Factory extends EntiteSimulee implements ILocatable {
         // l'usine explose mais peut toujours être frappée par d'autres missiles, on va seulement représenter
         // l'usine en rouge
         Logger.Information(this, "explode", "Explosion de l'usine :");
-        this.setExplosed(true);
+        this.setExploded(true);
     }
 
     @Override
@@ -47,8 +47,8 @@ public class Factory extends EntiteSimulee implements ILocatable {
         return isExploded;
     }
 
-    public void setExplosed(boolean explosed) {
-        isExploded = explosed;
+    public void setExploded(boolean exploded) {
+        isExploded = exploded;
     }
 }
 

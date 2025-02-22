@@ -91,8 +91,10 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	}
 
 
-	protected boolean isOnFactory() {
-		return Objects.equals(ini.direction.position().subtract(getPosition().position()), Vector2D.of(0, 0));
+	public boolean isOnFactory() {
+		Logger.Information(this, "isOnFactor", "Distance from the objective: " + this.getPosition().position().distance(ini.direction.position()));
+		return this.getPosition().position().distance(ini.direction.position()) < 25; // width of the factory: 250m
+		//return Objects.equals(ini.direction.position().subtract(getPosition().position()), Vector2D.of(0, 0));
 	}
 
 	@Override
