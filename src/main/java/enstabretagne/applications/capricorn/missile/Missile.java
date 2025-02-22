@@ -63,10 +63,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     Post(Move);
                 }
-                if (Missile.this.target.equals(Missile.this.previousCoordinates)){
-                    destroyMissile();
-                } else {
-                    Missile.this.previousCoordinates = Missile.this.target;
+                if (Missile.this.previousCoordinates != null){ // Missile got shot
+                    if (Missile.this.target.position().distance(Missile.this.previousCoordinates.position()) < 5) { // Mobile's width
+                        destroyMissile();
+                    } else {
+                        Missile.this.previousCoordinates = Missile.this.target;
+                    }
                 }
             }
         };
@@ -130,7 +132,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.engine.recherche(e -> {
             if (e instanceof Mobile) {
                 Mobile mobile = (Mobile) e;
-                if (mobile.getPosition().position().distance(this.position.position()) <= 5) {
+                if (mobile.getPosition().position().distance(this.position.position()) < 5) { // plane's radius is 10m
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;
                     if (isDestroyingTarget()){

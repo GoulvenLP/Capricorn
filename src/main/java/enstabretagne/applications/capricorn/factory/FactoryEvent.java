@@ -15,7 +15,7 @@ public class FactoryEvent extends SimEvent {
 
     private Boolean isMobileOnFactory(Mobile m) {
         FactoryInit factoryInit = (FactoryInit) entitePorteuseEvenement.getInit();
-        return m.getPosition().position().distance(factoryInit.position.position()) == 0;
+        return m.getPosition().position().distance(factoryInit.position.position()) < 250; // rayon de l'usine
     }
 
     private Boolean isMobileCrashed(Mobile m) {
