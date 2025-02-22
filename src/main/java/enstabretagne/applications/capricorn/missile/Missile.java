@@ -78,7 +78,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
             this.destroyMissile();
         }
         this.target = newTarget; // Mise à jour de la cible
-        Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new target");
+        Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
     }
 
     private void move(Location target) {

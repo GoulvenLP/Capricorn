@@ -2,11 +2,9 @@ package enstabretagne.applications.capricorn.radar;
 
 import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.mobile.Mobile;
-import enstabretagne.applications.capricorn.mobile.MobileInit;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
-import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.SimEvent;
 
 import java.util.List;
@@ -39,7 +37,6 @@ public class RadarEvent extends SimEvent {
             ((Radar)entitePorteuseEvenement).setTargetsDetected(true);
         }else{
             ((Radar)entitePorteuseEvenement).setTargetsDetected(false);
-            ((Radar) entitePorteuseEvenement).explodeExistingMissile();
         }
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);
