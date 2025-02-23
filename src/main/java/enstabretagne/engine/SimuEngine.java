@@ -65,34 +65,6 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 	}
 
 
-	/**
-	 * Recruits one mobile for a kamikaze mission
-	 * If there is no recruited mobile yet: recruits one,
-	 * else it doesn't do anything.
-	 */
-	public void launchMobile(){
-		boolean found = false;
-		// verify if already recruited
-		for (EntiteSimulee e : mesEntitesSimulees){
-			if (e instanceof Mobile){
-				if (((Mobile) e).isLaunched()){
-					found = true;
-					Logger.Information(this, "SimuEngine", "Mobile is still active");
-					break;
-				}
-			}
-		}
-		if (!found){
-			// recruit the first mobile found
-			for (EntiteSimulee e : mesEntitesSimulees){
-				if (e instanceof Mobile){
-					((Mobile)e).mission();
-					break;
-				}
-			}
-		}
-	}
-
 	public void simulate()
 	{
 		Logger.Detail(this, "simulate", "Début de la simulation");
@@ -121,8 +93,6 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			
 			//simple parcours de l'echeancier
 			while(hasANextEvent(stepEnd)) {
-				//chargement du premier avion
-				launchMobile();
 
 				//on prend le premier evenement suivant de l'echeancier
 				SimEvent ev = echeancier.first();

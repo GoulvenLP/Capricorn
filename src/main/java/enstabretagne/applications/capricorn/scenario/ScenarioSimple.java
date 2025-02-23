@@ -20,6 +20,8 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimuEngine;
 import enstabretagne.engine.SimuScenario;
 
+import java.util.Random;
+
 
 public class ScenarioSimple extends SimuScenario{
 
@@ -100,35 +102,63 @@ public class ScenarioSimple extends SimuScenario{
 		double speed = this.ini.getSpeed();
 
 
+
+		int totalDelay = 0;
 		switch (this.ini.getNbCessna()) {
 			case 1:
-				new Mobile(engine,iniCessna1, speed);
+				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
 				break;
 			case 2:
-				new Mobile(engine,iniCessna1, speed);
-				new Mobile(engine,iniCessna2, speed);
+				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(getStarterDelay()));
 				break;
 			case 3:
-				new Mobile(engine,iniCessna1, speed);
-				new Mobile(engine,iniCessna2, speed);
-				new Mobile(engine,iniCessna3, speed);
+				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+				totalDelay = getStarterDelay();
+				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
 				break;
 			case 4:
-				new Mobile(engine,iniCessna1, speed);
-				new Mobile(engine,iniCessna2, speed);
-				new Mobile(engine,iniCessna3, speed);
-				new Mobile(engine, iniCessna4, this.ini.getSpeed());
+				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+				totalDelay = getStarterDelay();
+				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine, iniCessna4, this.ini.getSpeed(), LogicalDuration.ofSeconds(totalDelay));
 				break;
 			case 5: // maximal number for the simulation
-				new Mobile(engine,iniCessna1, speed);
-				new Mobile(engine,iniCessna2, speed);
-				new Mobile(engine,iniCessna3, speed);
-				new Mobile(engine, iniCessna4, speed);
-				new Mobile(engine, iniCessna5, speed);
+				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+				totalDelay = getStarterDelay();
+				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine, iniCessna4, speed, LogicalDuration.ofSeconds(totalDelay));
+				totalDelay += getStarterDelay();
+				new Mobile(engine, iniCessna5, speed, LogicalDuration.ofSeconds(totalDelay));
 				break;
 			default:
 				//do nothing
 		}
+	}
+
+	/**
+	 * Generator of a random delay for the arrival of the first mobile, based on
+	 * Poisson's law. It takes an average of 5 minutes for a plane to go. This
+	 * delay must be inferior to 10 minutes.
+	 * @return a delay of time in seconds
+	 */
+	private static int getStarterDelay(){
+		final double lambda = 1./10.;
+		final double max_delay = 10 * 60.;
+		Random rand = new Random();
+		double time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
+		while (time >= max_delay){
+			time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
+		}
+		return (int)time;
 	}
 
 }

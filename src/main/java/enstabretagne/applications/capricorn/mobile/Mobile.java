@@ -34,8 +34,8 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	private double speed;
 	private double probaFail;
 	private boolean reachedObjective;
-	private boolean go; // if Mobile recruited for its mission
 	private boolean firstTime;
+	private LogicalDuration delayBeforeLaunch;
 
 	/**
 	 * Instantiates a new Mobile.
@@ -43,15 +43,16 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	 * @param engine the engine
 	 * @param ini    the ini
 	 * @param speed  the speed
+	 * @param delayBeforeLaunch
 	 */
-	public Mobile(SimuEngine engine, InitData ini, double speed) {
+	public Mobile(SimuEngine engine, InitData ini, double speed, LogicalDuration delayBeforeLaunch) {
 		super(engine, ini);
 		this.ini = (MobileInit) ini;
 		this.speed = speed;
 		this.probaFail = 0.1;
 		this.reachedObjective = false;
-		this.go = false;
 		this.firstTime = true;
+		this.delayBeforeLaunch = delayBeforeLaunch;
 
 		Move = new SimEvent(engine.Now()) {
 			@Override
@@ -67,22 +68,20 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 					}
 					explode();
 				}else{
-					if (go){
-						move();
-					}
+					move();
 				}
-				if (go){
-					if (firstTime){
-						Move.rescheduleAt(Now().add(Mobile.getStarterDelay()));
-						firstTime = false;
-					} else {
-						Move.rescheduleAt(Now().add(Mobile.this.ini.period));
-					}
-					Post(Move);
+				if (firstTime){
+					Move.rescheduleAt(Now().add(Mobile.this.delayBeforeLaunch));
+					firstTime = false;
+				} else {
+					Move.rescheduleAt(Now().add(Mobile.this.ini.period));
 				}
+				Post(Move);
 			}
 		};
 	}
+
+
 
 	/**
 	 * Generator of a random delay for the arrival of the first mobile, based on
@@ -138,20 +137,6 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		return p;
 	}
 
-	/**
-	 * Informs if the current mobile has already been recruited for his mission
-	 * @return true if it is the case, else returns false
-	 */
-	public boolean isLaunched(){
-		return this.go;
-	}
-
-	/**
-	 * Recruits the current mobile for its mission
-	 */
-	public void mission(){
-		this.go = true;
-	}
 
 	/**
 	 * Move.
