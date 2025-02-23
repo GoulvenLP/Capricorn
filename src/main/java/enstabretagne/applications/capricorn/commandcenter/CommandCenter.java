@@ -130,7 +130,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
                 activeMissiles.remove(missile);
             }
             // supprimer l'association missile-mobile ? (à voir)
-            activeMissiles.entrySet().removeIf(entry -> entry.getValue().equals(mobile));
+
         }
         else if (evt.getPropertyName().equals("switchingRadar")) {
             this.radarMode = Sensor.MISSILE;
@@ -138,7 +138,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
             Missile explodedMissile = (Missile) evt.getNewValue();
             Mobile explodedMobile = (Mobile) evt.getOldValue();
             activeMissiles.remove(explodedMissile);
-            // todo ?
+            activeMissiles.entrySet().removeIf(entry -> entry.getValue().equals(explodedMobile));
             if (activeMissiles.isEmpty()) {
                 resetCommandCenter();
             }
