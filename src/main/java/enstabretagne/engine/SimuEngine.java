@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
@@ -62,7 +63,36 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 		ev.Posted(false);
 		echeancier.remove(ev);
 	}
-	
+
+
+	/**
+	 * Recruits one mobile for a kamikaze mission
+	 * If there is no recruited mobile yet: recruits one,
+	 * else it doesn't do anything.
+	 */
+	public void launchMobile(){
+		boolean found = false;
+		// verify if already recruited
+		for (EntiteSimulee e : mesEntitesSimulees){
+			if (e instanceof Mobile){
+				if (((Mobile) e).isLaunched()){
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found){
+			// recruit the first mobile found
+			for (EntiteSimulee e : mesEntitesSimulees){
+				if (e instanceof Mobile){
+					((Mobile)e).mission();
+					break;
+				}
+			}
+		}
+	}
+
+
 	public void simulate()
 	{
 		Logger.Detail(this, "simulate", "Début de la simulation");
@@ -80,9 +110,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 	}
 
 	//boucle de simulation
-		public boolean simulate(LogicalDuration d)
-		{
-
+		public boolean simulate(LogicalDuration d) {
 			if(endReached) return pauseFlag;
 			
 			var stepEnd = currentDate.add(d);
@@ -92,8 +120,10 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			}
 			
 			//simple parcours de l'echeancier
-			while(hasANextEvent(stepEnd))
-			{
+			while(hasANextEvent(stepEnd)) {
+				//chargement du premier avion
+				launchMobile();
+
 				//on prend le premier evenement suivant de l'echeancier
 				SimEvent ev = echeancier.first();
 				
@@ -187,6 +217,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 		System.gc();
 
 	}
+
 
 	@Override
 	public ScenarioId getScenarioId() {

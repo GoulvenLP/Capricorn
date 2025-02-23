@@ -1,5 +1,6 @@
 package enstabretagne.applications.capricorn.mobile;
 
+import enstabretagne.base.time.LogicalDuration;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import enstabretagne.applications.capricorn.expertise.ILocatable;
@@ -33,6 +34,8 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	private double speed;
 	private double probaFail;
 	private boolean reachedObjective;
+	private boolean go; // if Mobile recruited for its mission
+	private boolean firstTime;
 
 	/**
 	 * Instantiates a new Mobile.
@@ -47,6 +50,8 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		this.speed = speed;
 		this.probaFail = 0.1;
 		this.reachedObjective = false;
+		this.go = false;
+		this.firstTime = true;
 
 		Move = new SimEvent(engine.Now()) {
 			@Override
@@ -62,12 +67,38 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 					}
 					explode();
 				}else{
-					move();
+					if (go){
+						move();
+					}
 				}
-				Move.rescheduleAt(Now().add(Mobile.this.ini.period));
-				Post(Move);
+				if (go){
+					if (firstTime){
+						Move.rescheduleAt(Now().add(Mobile.getStarterDelay()));
+						firstTime = false;
+					} else {
+						Move.rescheduleAt(Now().add(Mobile.this.ini.period));
+					}
+					Post(Move);
+				}
 			}
 		};
+	}
+
+	/**
+	 * Generator of a random delay for the arrival of the first mobile, based on
+	 * Poisson's law. It takes an average of 5 minutes for a plane to go. This
+	 * delay must be inferior to 10 minutes.
+	 * @return a LogicalDuration of time in seconds
+	 */
+	private static LogicalDuration getStarterDelay(){
+		final double lambda = 1./10.;
+		final double max_delay = 10 * 60.;
+		Random rand = new Random();
+		double time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
+		while (time >= max_delay){
+			time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
+		}
+		return LogicalDuration.ofSeconds((int)time);
 	}
 
 	/**
@@ -105,6 +136,21 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	@Override
 	public Location getPosition() {
 		return p;
+	}
+
+	/**
+	 * Informs if the current mobile has already been recruited for his mission
+	 * @return true if it is the case, else returns false
+	 */
+	public boolean isLaunched(){
+		return this.go;
+	}
+
+	/**
+	 * Recruits the current mobile for its mission
+	 */
+	public void mission(){
+		this.go = true;
 	}
 
 	/**
