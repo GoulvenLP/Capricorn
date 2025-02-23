@@ -70,7 +70,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     public void updateTarget(Location newTarget) {
         this.target = newTarget; // Mise à jour de la cible
-        Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
+        Logger.Information(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
     }
 
     private void move(Location target) {
@@ -133,9 +133,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
                         mobile.explode();
                         double distanceFromFactory = mobile.getPosition().position().distance(mobile.getTargetCoordinates().position());
                         // warn the commandCenter to trace the info
+                        Logger.Detail(this, "checkImpact", "Interception_mobile, 1");
+                        Logger.Detail(this, "checkImpact", "distance, " + distanceFromFactory);
                         this.pcs.firePropertyChange("interception", null, true);
                         this.pcs.firePropertyChange("distance", null, distanceFromFactory);
                     } else {
+                        Logger.Detail(this, "checkImpact", "missile_failure, 1");
                         this.pcs.firePropertyChange("missile_failed", mobile, this);
                     }
                     destroyMissile();

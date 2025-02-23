@@ -24,7 +24,7 @@ public class RadarEvent extends SimEvent {
 
     @Override
     public void process() {
-        Logger.Detail(entitePorteuseEvenement, "RadarEvent.Process", "RadarEvent à " + getDateOccurence());
+        Logger.Information(entitePorteuseEvenement, "RadarEvent.Process", "RadarEvent à " + getDateOccurence());
         // predicat pour vérifier qu'un mobile est à un certaine position du radar
         List<Mobile> detectedMobiles = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
                         isMobileInRadar((Mobile) e))

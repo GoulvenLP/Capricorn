@@ -7,6 +7,7 @@ import enstabretagne.applications.capricorn.factory.Factory;
 import enstabretagne.applications.capricorn.factory.FactoryInit;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.missile.MissileInit;
+import enstabretagne.base.logger.Logger;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import enstabretagne.applications.capricorn.environnement.Environement;
@@ -30,6 +31,9 @@ public class ScenarioSimple extends SimuScenario{
 	public ScenarioSimple(SimuEngine engine, InitData ini) {
 		super(engine, ini);
 		this.ini = (ScenarioSimpleInit) ini;
+		Logger.Detail(this, "scenario_simple", "scenario_name," + ini.getName());
+		Logger.Detail(this, "scenario_simple", "nb_mobiles," + ((ScenarioSimpleInit) ini).getNbCessna());
+		Logger.Detail(this, "scenario_simple", "mobiles_speed," + ((ScenarioSimpleInit) ini).getSpeed());
 	}
 
 	@Override

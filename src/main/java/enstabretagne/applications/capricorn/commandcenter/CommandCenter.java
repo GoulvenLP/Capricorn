@@ -50,7 +50,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         int targetsCount = targetLastMobiles.size();
         int missilesManquants = targetsCount - activeMissilesCount;
 
-        Logger.Detail(this, "action", "Missiles actifs : " + activeMissilesCount + ", Mobiles détectés : " + targetsCount + ", Missiles à tirer : " + missilesManquants);
+        Logger.Information(this, "action", "Missiles actifs : " + activeMissilesCount + ", Mobiles détectés : " + targetsCount + ", Missiles à tirer : " + missilesManquants);
 
         // Tirer seulement le nombre nécessaire de missiles
         for (int i = 0; i < missilesManquants && i < newTargets.size(); i++) {
@@ -88,10 +88,12 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         }
 
         Missile missile = availableMissile.get();
-        Logger.Detail(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné au mobile " + targetMobile);
+        Logger.Information(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné au mobile " + targetMobile);
 
         //trace the missile
         this.trace.incrementLaunchedMissiles();
+        Logger.Detail(this, "scheduleFireMissile", "missile_shot, 1");
+
 
         SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
             @Override
@@ -128,6 +130,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
             this.targetLastMobiles = new ArrayList<>((List<Mobile>) evt.getNewValue());
             this.action();
         } else if (evt.getPropertyName().equals("factory")) {
+            Logger.Detail(this, "propertyChange", "factory_damage, 1");
             Logger.Information(this, "propertyChange", "Alerte reçue : Usine touchée par un mobile.");
 
             this.trace.incrementFactoryDamages();

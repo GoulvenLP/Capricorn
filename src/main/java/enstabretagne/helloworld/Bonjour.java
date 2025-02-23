@@ -18,9 +18,9 @@ public class Bonjour extends SimEvent {
 	}
 
 	public void process() {
-		Logger.Detail(entitePorteuseEvenement, "bonjour.Process",
+		Logger.Information(entitePorteuseEvenement, "bonjour.Process",
 				"Bonjour de la part de " + nom + " à " + getDateOccurence());
-		Logger.Detail(entitePorteuseEvenement, "bonjour.Process",
+		Logger.Information(entitePorteuseEvenement, "bonjour.Process",
 				"mon film préféré est " + ((InitEtudiant) entitePorteuseEvenement.getInit()).filmPrefere);
 
 		List<EntiteSimulee> amis = entitePorteuseEvenement.recherche(e -> ((e instanceof EtudiantSimple)
@@ -44,14 +44,14 @@ public class Bonjour extends SimEvent {
 				}
 				}
 
-				Logger.Detail(entitePorteuseEvenement, "bonjour.Process",
+				Logger.Information(entitePorteuseEvenement, "bonjour.Process",
 						"mon " + amiString + " est " + ((EtudiantSimple) amis.get(0)).nom);
 			} else {
 				String amisString = "";
 				for (EntiteSimulee e : amis) {
 					amisString = amisString + ((EtudiantSimple) e).nom + " ";
 				}
-				Logger.Detail(entitePorteuseEvenement, "bonjour.Process", "mes amis sont : " + amisString);
+				Logger.Information(entitePorteuseEvenement, "bonjour.Process", "mes amis sont : " + amisString);
 
 			}
 		}
