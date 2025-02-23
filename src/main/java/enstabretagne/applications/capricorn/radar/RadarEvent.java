@@ -5,6 +5,7 @@ import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.SimEvent;
 
 import java.util.List;
@@ -35,6 +36,10 @@ public class RadarEvent extends SimEvent {
             Logger.Information(entitePorteuseEvenement, "RadarEvent.Process", "Mobiles trouvés : " + detectedMobiles);
             ((Radar) entitePorteuseEvenement).alertCommandCenter(detectedMobiles);
             ((Radar)entitePorteuseEvenement).setTargetsDetected(true);
+            // register the last coordinates
+            for (EntiteSimulee e : detectedMobiles){
+                ((Radar)entitePorteuseEvenement).add((Mobile)e);
+            }
         }else{
             ((Radar)entitePorteuseEvenement).setTargetsDetected(false);
         }

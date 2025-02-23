@@ -168,4 +168,8 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		return ini.name;
 	}
 
+	public String getName(){
+		return this.ini.name;
+	}
+
 }
