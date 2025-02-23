@@ -5,6 +5,7 @@ import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.SimEvent;
 
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class FactoryEvent extends SimEvent {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
 
         Optional<Mobile> mobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                        isMobileOnFactory((Mobile) e))
+                        isMobileOnFactory((Mobile) e) && e.getEtat() != EntiteSimulee.EtatEntite.DEAD)
                 .stream()
                 .map(e -> (Mobile) e)
                 .findFirst();

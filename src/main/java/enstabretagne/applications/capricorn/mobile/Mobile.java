@@ -117,12 +117,10 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		Logger.Information(this, "explode", "Explosion Position :" + getPosition());
 		unPost(Move);
 		terminate();
-		//engine.deleteEntity(this);
 	}
 
 
 	public boolean isOnFactory() {
-		Logger.Information(this, "isOnFactor", "Distance from the objective: " + this.getPosition().position().distance(ini.direction.position()));
 		return this.getPosition().position().distance(ini.direction.position()) < 25; // width of the factory: 250m
 	}
 
@@ -143,7 +141,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	 * Move.
 	 */
 	public void move() {
-		Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
+		//Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
 		Vector2D direction = ini.direction.position().subtract(this.getPosition().position())
 				.normalize()
 				.multiply(10*this.speed / 200);
