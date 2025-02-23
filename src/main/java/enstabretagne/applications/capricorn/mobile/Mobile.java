@@ -1,5 +1,6 @@
 package enstabretagne.applications.capricorn.mobile;
 
+import enstabretagne.applications.capricorn.factory.Factory;
 import enstabretagne.base.time.LogicalDuration;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
@@ -121,7 +122,9 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 
 
 	public boolean isOnFactory() {
-		return this.getPosition().position().distance(ini.direction.position()) < 25; // width of the factory: 250m
+		Factory f= (Factory) this.engine.recherche(e -> e instanceof Factory).stream().findFirst().get();
+
+		return this.getPosition().position().distance(ini.direction.position()) < f.ini.width; // width of the factory: 250m
 	}
 
 	@Override

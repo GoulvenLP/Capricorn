@@ -8,7 +8,6 @@ import enstabretagne.applications.capricorn.factory.FactoryInit;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.missile.MissileInit;
 import org.apache.commons.geometry.euclidean.twod.Vector2D;
-
 import enstabretagne.applications.capricorn.environnement.Environement;
 import enstabretagne.applications.capricorn.environnement.EnvironnementInit;
 import enstabretagne.applications.capricorn.mobile.Mobile;
@@ -34,45 +33,31 @@ public class ScenarioSimple extends SimuScenario{
 
 	@Override
 	public void Init() {
-		//int scaleX = 1;	//in meters
-		//int scaleY = 1; 	// in meters
-
-		int scaleX = 5;	//in meters
-		int scaleY = 20; 	// in meters
-
-		int base_distance = 100; // just for better visualization
+		double scaleX = 10;
+		double scaleY = 10;
 
 		super.Init();
 		var envIni = new EnvironnementInit("Env");
-		//var factory = envIni.addPosition("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
-		var factory = new Location("Factory", Vector2D.of((base_distance+40)*scaleX, 10*scaleY));
-		var radar = envIni.addPosition("Radar", Vector2D.of((base_distance+30)*scaleX, 10*scaleY));
-		var p1 = envIni.addPosition("P1", Vector2D.of(base_distance*scaleX, 0*scaleY));
-		var p2 = envIni.addPosition("P2", Vector2D.of((base_distance+30)*scaleX, 2*scaleY));
-		var p3 = envIni.addPosition("P3", Vector2D.of((base_distance+30)*scaleX, 18*scaleY));
-		var p4 = envIni.addPosition("P4", Vector2D.of(base_distance*scaleX, 20*scaleY));
+		var factory = new Location("Factory", Vector2D.of(310 * scaleX, 10 * scaleY));
 
-		//var cesna = envIni.addPosition("cesna", Vector2D.of(0*scaleX, 10*scaleY));
-		var cesna_1 = envIni.addPosition("cesna1", Vector2D.of(0*scaleX, 10*scaleY));
-		var cesna_2 = envIni.addPosition("cesna2", Vector2D.of(10*scaleX, 0*scaleY));
-		var cesna_3 = envIni.addPosition("cesna3", Vector2D.of(5*scaleX, 5*scaleY));
-		var cesna_4 = envIni.addPosition("cesna4", Vector2D.of(2.5*scaleX, 2.5*scaleY));
-		var cesna_5 = envIni.addPosition("cesna5", Vector2D.of(7.5*scaleX, 7.5*scaleY));
+		var radar = envIni.addPosition("Radar", Vector2D.of(309 * scaleX, 10 * scaleY));
+		var p1 = envIni.addPosition("P1", Vector2D.of(300 * scaleX, 0 * scaleY));
+		var p2 = envIni.addPosition("P2", Vector2D.of(309 * scaleX, 9 * scaleY));
+		var p3 = envIni.addPosition("P3", Vector2D.of(309 * scaleX, 11 * scaleY));
+		var p4 = envIni.addPosition("P4", Vector2D.of(300 * scaleX, 20 * scaleY));
+
+		var cesna_1 = envIni.addPosition("cesna1", Vector2D.of(0 * scaleX, 10 * scaleY));
+
 		var env = new Environement(engine, envIni);
 
-		// period: period of the "scan" rescheduling
+		var iniF = new FactoryInit("Factory", new Location("Factory", factory.position()), 0.25*scaleX);
 
-		// Factory
-		var iniF = new FactoryInit("Factory",new Location("Factory",factory.position()));
+		var iniM1 = new MissileInit("M1", p1, LogicalDuration.ofSeconds(1), 1, LogicalDuration.ofSeconds(3));
+		var iniM2 = new MissileInit("M2", p2, LogicalDuration.ofSeconds(1), 2, LogicalDuration.ofSeconds(3));
+		var iniM3 = new MissileInit("M3", p3, LogicalDuration.ofSeconds(1), 3, LogicalDuration.ofSeconds(3));
+		var iniM4 = new MissileInit("M4", p4, LogicalDuration.ofSeconds(1), 4, LogicalDuration.ofSeconds(3));
 
-		// Missiles (init)
-		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1, LogicalDuration.ofSeconds(3));
-		var iniM2 = new MissileInit("M2",p2,LogicalDuration.ofSeconds(1), 2,LogicalDuration.ofSeconds(3));
-		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3,LogicalDuration.ofSeconds(3));
-		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4,LogicalDuration.ofSeconds(3));
-
-		// Radar
-		var iniR = new RadarInit("R",radar,300, LogicalDuration.ofSeconds(1));
+		var iniR = new RadarInit("R", radar, 100*scaleX, LogicalDuration.ofSeconds(1));  // Déjà en km
 
 		// Command Center
 		var iniCC = new CommandCenterInit("CommandCenter");
@@ -80,10 +65,6 @@ public class ScenarioSimple extends SimuScenario{
 
 		// Cessna - the target point is the factory
 		var iniCessna1 = new MobileInit("C1",cesna_1,LogicalDuration.ofSeconds(1), factory);
-		var iniCessna2 = new MobileInit("C2",cesna_2,LogicalDuration.ofSeconds(1), factory);
-		var iniCessna3 = new MobileInit("C3",cesna_3,LogicalDuration.ofSeconds(1), factory);
-		var iniCessna4 = new MobileInit("C4",cesna_4,LogicalDuration.ofSeconds(1), factory);
-		var iniCessna5 = new MobileInit("C5",cesna_5,LogicalDuration.ofSeconds(1), factory);
 
 		var cc = new CommandCenter(engine, iniCC);
 
@@ -104,44 +85,45 @@ public class ScenarioSimple extends SimuScenario{
 
 
 		int totalDelay = 0;
-		switch (this.ini.getNbCessna()) {
-			case 1:
-				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
-				break;
-			case 2:
-				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
-				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(getStarterDelay()));
-				break;
-			case 3:
-				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
-				totalDelay = getStarterDelay();
-				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
-				break;
-			case 4:
-				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
-				totalDelay = getStarterDelay();
-				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine, iniCessna4, this.ini.getSpeed(), LogicalDuration.ofSeconds(totalDelay));
-				break;
-			case 5: // maximal number for the simulation
-				new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
-				totalDelay = getStarterDelay();
-				new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine, iniCessna4, speed, LogicalDuration.ofSeconds(totalDelay));
-				totalDelay += getStarterDelay();
-				new Mobile(engine, iniCessna5, speed, LogicalDuration.ofSeconds(totalDelay));
-				break;
-			default:
-				//do nothing
-		}
+		new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//        switch (this.ini.getNbCessna()) {
+//            case 1:
+//                new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//                break;
+//            case 2:
+//                new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//                new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(getStarterDelay()));
+//                break;
+//            case 3:
+//                new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//                totalDelay = getStarterDelay();
+//                new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
+//                break;
+//            case 4:
+//                new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//                totalDelay = getStarterDelay();
+//                new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine, iniCessna4, this.ini.getSpeed(), LogicalDuration.ofSeconds(totalDelay));
+//                break;
+//            case 5: // maximal number for the simulation
+//                new Mobile(engine,iniCessna1, speed, LogicalDuration.ofSeconds(0));
+//                totalDelay = getStarterDelay();
+//                new Mobile(engine,iniCessna2, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine,iniCessna3, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine, iniCessna4, speed, LogicalDuration.ofSeconds(totalDelay));
+//                totalDelay += getStarterDelay();
+//                new Mobile(engine, iniCessna5, speed, LogicalDuration.ofSeconds(totalDelay));
+//                break;
+//            default:
+//                //do nothing
+//        }
 	}
 
 	/**

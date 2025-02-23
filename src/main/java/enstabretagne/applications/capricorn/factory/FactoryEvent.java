@@ -18,7 +18,6 @@ public class FactoryEvent extends SimEvent {
     }
 
     private Boolean isMobileOnFactory(Mobile m) {
-        FactoryInit factoryInit = (FactoryInit) entitePorteuseEvenement.getInit();
         return m.isOnFactory();
     }
 
