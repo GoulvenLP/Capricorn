@@ -3,6 +3,7 @@ package enstabretagne.applications.capricorn.radar;
 import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.applications.capricorn.expertise.ILocatable;
 import enstabretagne.applications.capricorn.expertise.Location;
+import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
@@ -44,10 +45,11 @@ public class Radar extends EntiteSimulee implements ILocatable {
 	 *
 	 * @param l the list of targets location to alert the command center
 	 */
-	public void alertCommandCenter(List<Location> l) {
+	public void alertCommandCenter(List<Mobile> l) {
 		Logger.Information(this, "alertCommandCenter", "Alerting Command Center");
 		this.pcs.firePropertyChange(new PropertyChangeEvent(this, "mobile", null, l));
 	}
+
 
 
 	@Override

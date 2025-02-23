@@ -1,27 +1,34 @@
 package enstabretagne.applications.capricorn.factory;
 
+import enstabretagne.applications.capricorn.commandcenter.CommandCenter;
 import enstabretagne.applications.capricorn.expertise.ILocatable;
 import enstabretagne.applications.capricorn.expertise.Location;
+import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 
+import java.beans.PropertyChangeSupport;
+
 public class Factory extends EntiteSimulee implements ILocatable {
 
     Location position;
 
     SimEvent FactoryEvent;
-
+    private final PropertyChangeSupport pcs;
     private boolean isExploded;
 
     public final FactoryInit ini;
-    public Factory(SimuEngine engine, InitData ini) {
+
+    public Factory(SimuEngine engine, InitData ini, CommandCenter commandCenter) {
         super(engine, ini);
         this.ini = (FactoryInit) ini;
         this.FactoryEvent = new FactoryEvent(engine.Now());
         this.isExploded = false;
+        this.pcs = new PropertyChangeSupport(this);
+        this.pcs.addPropertyChangeListener(commandCenter); // add listener
     }
 
     @Override
@@ -36,6 +43,11 @@ public class Factory extends EntiteSimulee implements ILocatable {
         // l'usine en rouge
         Logger.Information(this, "explode", "Explosion de l'usine :");
         this.setExploded(true);
+    }
+
+    protected void alertCommandCenter(Mobile m) {
+        Logger.Information(this, "alertCommandCenter", "Factory hit ! Alerting Command Center");
+        this.pcs.firePropertyChange("factory", null, m);
     }
 
     @Override

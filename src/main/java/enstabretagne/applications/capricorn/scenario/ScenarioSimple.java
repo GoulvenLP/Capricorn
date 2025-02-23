@@ -87,7 +87,7 @@ public class ScenarioSimple extends SimuScenario{
 		var cc = new CommandCenter(engine, iniCC);
 
 
-		new Factory(engine, iniF);
+		new Factory(engine, iniF, cc);
 
 		new Radar(engine,iniR, cc);
 

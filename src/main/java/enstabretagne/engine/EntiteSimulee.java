@@ -12,6 +12,7 @@ public abstract class EntiteSimulee {
 	protected SimuEngine engine;
 	private InitData ini;
 
+
 	public enum EtatEntite {NONE,INITIALIZED,DEAD};
 	//etat de l'entite
 	private EtatEntite etat;
@@ -35,6 +36,7 @@ public abstract class EntiteSimulee {
 		ev.entitePorteuseEvenement = this;
 		engine.Post(ev);
 	}
+
 
 	public void unPost(SimEvent ev) {
 		engine.unPost(ev);

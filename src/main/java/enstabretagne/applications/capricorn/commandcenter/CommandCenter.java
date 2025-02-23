@@ -17,15 +17,16 @@ import java.util.*;
 
 public class CommandCenter extends EntiteSimulee implements PropertyChangeListener {
     private enum Sensor { COMMAND_CENTER, MISSILE}; // source of the radar used to detect the target
-    private List<Location> targetLastCoordinates; // coordinates used to target a detected engine
-    private Sensor radarMode;
-    private final Map<Missile, Location> activeMissiles;
 
+    private List<Mobile> targetLastMobiles;
+
+    private Sensor radarMode;
+    private final Map<Missile, Mobile> activeMissiles;
 
     public CommandCenter(SimuEngine engine, InitData init){
         super(engine, init);
         this.activeMissiles = new HashMap<>();
-        this.targetLastCoordinates = null;
+        this.targetLastMobiles = new ArrayList<>();
         this.radarMode = Sensor.COMMAND_CENTER;
     }
 
@@ -34,20 +35,20 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * or updates its trajectory if a missile got already shot.
      */
     public void action() {
-        // Récupérer les cibles actuellement suivies
-        Set<Location> assignedTargets = new HashSet<>(activeMissiles.values());
+        // Récupérer les mobiles actuellement suivis
+        Set<Mobile> assignedMobiles = new HashSet<>(activeMissiles.values());
 
-        // Identifier les nouvelles cibles (mobiles non encore assignés)
-        List<Location> newTargets = targetLastCoordinates.stream()
-                .filter(target -> !assignedTargets.contains(target))
+        // Identifier les nouveaux mobiles (ceux non encore assignés)
+        List<Mobile> newTargets = targetLastMobiles.stream()
+                .filter(mobile -> !assignedMobiles.contains(mobile))
                 .toList();
 
         // Déterminer combien de missiles supplémentaires sont nécessaires
         int activeMissilesCount = activeMissiles.size();
-        int targetsCount = targetLastCoordinates.size();
+        int targetsCount = targetLastMobiles.size();
         int missilesManquants = targetsCount - activeMissilesCount;
 
-        Logger.Detail(this, "action", "Missiles actifs : " + activeMissilesCount + ", Cibles : " + targetsCount + ", Missiles à tirer : " + missilesManquants);
+        Logger.Detail(this, "action", "Missiles actifs : " + activeMissilesCount + ", Mobiles détectés : " + targetsCount + ", Missiles à tirer : " + missilesManquants);
 
         // Tirer seulement le nombre nécessaire de missiles
         for (int i = 0; i < missilesManquants && i < newTargets.size(); i++) {
@@ -59,16 +60,17 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
     }
 
 
+
     /**
      * Programs a missile in the scheduler for two seconds later,
      * sets the class variable firedMissile to true
      */
-    public void scheduleFireMissile(Location target) {
+    public void scheduleFireMissile(Mobile targetMobile) {
         Optional<Missile> availableMissile = this.engine.recherche(e -> e instanceof Missile)
                 .stream()
                 .map(e -> (Missile) e)
                 .filter(m -> !activeMissiles.containsKey(m)) // Ne prendre que les missiles inactifs
-                .min(Comparator.comparingDouble(m -> m.getPosition().position().distance(target.position())));
+                .min(Comparator.comparingDouble(m -> m.getPosition().position().distance(targetMobile.getPosition().position())));
 
         if (availableMissile.isEmpty()) {
             Logger.Warning(this, "scheduleFireMissile", "Aucun missile disponible pour suivre la cible.");
@@ -76,18 +78,18 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         }
 
         Missile missile = availableMissile.get();
-        Logger.Detail(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné à la cible.");
+        Logger.Detail(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné au mobile " + targetMobile);
 
-        // Planifier le tir après 2 secondes
         SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
             @Override
             public void process() {
-                missile.Fire(target);
-                activeMissiles.put(missile, target); // Associer le missile à la cible
+                missile.Fire(targetMobile.getPosition());
+                activeMissiles.put(missile, targetMobile); // Associer le missile au mobile
             }
         };
         super.Post(fireMissile);
     }
+
 
 
     /**
@@ -97,21 +99,9 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      */
     public void updateMissileTrajectory() {
         Logger.Information(this, "updateMissileTrajectory", "Mise à jour des trajectoires des missiles.");
-
-        activeMissiles.forEach((missile, currentTarget) -> {
-            Optional<Location> closestTarget = targetLastCoordinates.stream()
-                    .min(Comparator.comparingDouble(t -> t.position().distance(missile.getPosition().position())));
-
-            if (closestTarget.isPresent()) {
-                Location newTarget = closestTarget.get();
-                missile.updateTarget(newTarget);
-                activeMissiles.put(missile, newTarget);
-            } else { // no more targets around but the missile is still in the air: destroy it
-                missile.destroyMissile();
-            }
+        activeMissiles.forEach((missile, mobile) -> {
+            missile.updateTarget(mobile.getPosition()); // On récupère directement la position actuelle du mobile
         });
-
-
     }
 
 
@@ -122,22 +112,33 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      */
     public void propertyChange(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("mobile")) {
-            if(evt.getNewValue() != null) {
-                this.targetLastCoordinates = new ArrayList<>((List<Location>) evt.getNewValue());
-                System.out.println(this.targetLastCoordinates);
-                this.action();
-            }else{
-                Location explosionLocation = new Location("safeExplosionPlace", Vector2D.of(0, 0));
-                this.targetLastCoordinates = List.of(explosionLocation);
-                this.action();
-            }
+            this.targetLastMobiles = new ArrayList<>((List<Mobile>) evt.getNewValue());
+            System.out.println(this.targetLastMobiles);
+            this.action();
+        } else if (evt.getPropertyName().equals("factory")) {
+            Logger.Information(this, "propertyChange", "Alerte reçue : Usine touchée par un mobile.");
+            Mobile mobile = (Mobile) evt.getNewValue();
 
-        } else if (evt.getPropertyName().equals("switchingRadar")) {
+            // supprimer le missile associé au mobile s'il existe
+            Missile missile = activeMissiles.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(mobile))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
+            if (missile != null) {
+                missile.destroyMissile();
+                activeMissiles.remove(missile);
+            }
+            // supprimer l'association missile-mobile ? (à voir)
+            activeMissiles.entrySet().removeIf(entry -> entry.getValue().equals(mobile));
+        }
+        else if (evt.getPropertyName().equals("switchingRadar")) {
             this.radarMode = Sensor.MISSILE;
         } else if (evt.getPropertyName().equals("missile_exploded")) {
             Missile explodedMissile = (Missile) evt.getNewValue();
+            Mobile explodedMobile = (Mobile) evt.getOldValue();
             activeMissiles.remove(explodedMissile);
-
+            // todo ?
             if (activeMissiles.isEmpty()) {
                 resetCommandCenter();
             }
@@ -149,7 +150,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      */
     public void resetCommandCenter() {
         this.activeMissiles.clear();
-        this.targetLastCoordinates = null;
+        this.targetLastMobiles.clear();
         this.radarMode = Sensor.COMMAND_CENTER;
     }
 

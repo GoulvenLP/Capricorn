@@ -61,22 +61,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     Post(Move);
                 }
-                // TODO ADJUST DISTANCE ?
-                if (Missile.this.target.position().distance(Missile.this.position.position()) < 5) { // Mobile reached       5 == Mobile's width
-                    destroyMissile();
-                } else if (Missile.this.target.position() == null) { // Mobile crashed
-                    destroyMissile();
-                }
             }
         };
         Post(this.Move);
     }
 
     public void updateTarget(Location newTarget) {
-        // target reached its objective --> coordinates remain constant
-        if (this.target.equals(newTarget)){
-            this.destroyMissile();
-        }
         this.target = newTarget; // Mise à jour de la cible
         Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
     }
@@ -87,7 +77,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
             this.embeddedRadarActivated = true;
             Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
             this.pcs.firePropertyChange("switchingRadar", null, null);
-            // TODO: timing goes to ms here
             this.speed = 2000;
         }
 
@@ -115,35 +104,35 @@ public class Missile extends EntiteSimulee implements ILocatable {
         if (val > this.probaFail * 10){
             status = true;
         }
+        Logger.Information(this, "isDestroyingTarget", "Missile " + this.getId() + " will explode target : " + status );
         return status;
     }
 
     public void destroyMissile(){
-        unPost(this.Move);
-        terminate();
-        this.Move = null;
+        if(this.Move.Posted()){
+            unPost(this.Move);
+            terminate();
+        }
     }
 
     private void checkImpact() {
         // get the Mobile
+        // TODO ADJUST DISTANCE ?
         this.engine.recherche(e -> {
-            if (e instanceof Mobile) {
-                Mobile mobile = (Mobile) e;
+            if (e instanceof Mobile mobile) {
                 // TODO VERIFY IF DISTANCE IS OK
                 if (mobile.getPosition().position().distance(this.position.position()) < 5) { // plane's radius is 10m
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;
-                    if (isDestroyingTarget()){
+                    if (isDestroyingTarget()) {
                         mobile.explode();
                     }
                     destroyMissile();
-                    this.pcs.firePropertyChange("missile_exploded", null, null);
-
+                    this.pcs.firePropertyChange("missile_exploded", mobile, this);
                 }
             }
             return false;
         });
-
     }
 
 

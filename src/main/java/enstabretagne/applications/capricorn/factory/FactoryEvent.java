@@ -1,10 +1,13 @@
 package enstabretagne.applications.capricorn.factory;
 
+import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.SimEvent;
+
+import java.util.Optional;
 
 
 public class FactoryEvent extends SimEvent {
@@ -25,20 +28,22 @@ public class FactoryEvent extends SimEvent {
     @Override
     public void process() {
         Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
-        // predicat pour vérifier qu'un mobile a atteint l'usine et qu'il n'a pas manqué sa cible
-        // todo verify isMobileAbove --> is the scale right?
-        boolean isMobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
-                isMobileOnFactory((Mobile) e) && isMobileCrashed((Mobile) e))
-                .stream()
-                .findFirst()
-                .isPresent();
 
-        if(isMobileAbove){
+        Optional<Mobile> mobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
+                        isMobileOnFactory((Mobile) e))
+                .stream()
+                .map(e -> (Mobile) e)
+                .findFirst();
+
+        if (mobileAbove.isPresent()) {
             Logger.Information(entitePorteuseEvenement, "FactoryEvent.Process", "Usine touchée par un mobile");
-            ((Factory) entitePorteuseEvenement).explode();
+            Factory factory = (Factory) entitePorteuseEvenement;
+            factory.explode();
+            factory.alertCommandCenter(mobileAbove.get());
         }
 
         this.rescheduleAt(getDateOccurence().add(LogicalDuration.ofSeconds(1)));
         entitePorteuseEvenement.Post(this);
     }
+
 }
