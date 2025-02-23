@@ -66,14 +66,6 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
      * sets the class variable firedMissile to true
      */
     public void scheduleFireMissile(Mobile targetMobile) {
-        // Vérifier si un missile traque déjà ce mobile
-        boolean isAlreadyTracked = activeMissiles.containsValue(targetMobile);
-        if (isAlreadyTracked) {
-            Logger.Warning(this, "scheduleFireMissile", "Le mobile " + targetMobile + " est déjà traqué par un missile.");
-            return;
-        }
-
-        // Trouver un missile disponible
         Optional<Missile> availableMissile = this.engine.recherche(e -> e instanceof Missile)
                 .stream()
                 .map(e -> (Missile) e)
@@ -97,7 +89,6 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         };
         super.Post(fireMissile);
     }
-
 
 
 

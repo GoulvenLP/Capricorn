@@ -117,6 +117,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		Logger.Information(this, "explode", "Explosion Position :" + getPosition());
 		unPost(Move);
 		terminate();
+		//engine.deleteEntity(this);
 	}
 
 

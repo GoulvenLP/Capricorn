@@ -65,6 +65,10 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 	}
 
 
+	public void deleteEntity(EntiteSimulee e) {
+		mesEntitesSimulees.remove(e);
+	}
+
 	public void simulate()
 	{
 		Logger.Detail(this, "simulate", "Début de la simulation");
