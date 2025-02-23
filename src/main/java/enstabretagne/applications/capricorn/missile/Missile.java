@@ -29,6 +29,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     private boolean isActive;
 
+    private final CommandCenter commandCenter;
+
 
     public Missile(SimuEngine engine, InitData ini, CommandCenter commandCenter) {
         super(engine, ini);
@@ -38,7 +40,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         this.probaFail = 0.1;
         this.speed = 1500;
         this.embeddedRadarActivated = false;
-
+        this.commandCenter = commandCenter;
         this.pcs = new PropertyChangeSupport(this);
         this.pcs.addPropertyChangeListener(commandCenter);
     }
@@ -110,6 +112,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     public void destroyMissile(){
         if(this.Move.Posted()){
+            // event pour recharger le missile après destruction
+            this.commandCenter.reloadMissile(this);
             unPost(this.Move);
             terminate();
         }
@@ -168,9 +172,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         return position;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
+
 
 
 

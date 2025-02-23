@@ -20,7 +20,6 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimuEngine;
 import enstabretagne.engine.SimuScenario;
 
-import java.util.Random;
 
 public class ScenarioSimple extends SimuScenario{
 
@@ -65,10 +64,10 @@ public class ScenarioSimple extends SimuScenario{
 		var iniF = new FactoryInit("Factory",new Location("Factory",factory.position()));
 
 		// Missiles (init)
-		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1);
-		var iniM2 = new MissileInit("M2",p2,LogicalDuration.ofSeconds(1), 2);
-		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3);
-		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4);
+		var iniM1 = new MissileInit("M1",p1,LogicalDuration.ofSeconds(1), 1, LogicalDuration.ofSeconds(3));
+		var iniM2 = new MissileInit("M2",p2,LogicalDuration.ofSeconds(1), 2,LogicalDuration.ofSeconds(3));
+		var iniM3 = new MissileInit("M3",p3,LogicalDuration.ofSeconds(1), 3,LogicalDuration.ofSeconds(3));
+		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4,LogicalDuration.ofSeconds(3));
 
 		// Radar
 		var iniR = new RadarInit("R",radar,300, LogicalDuration.ofSeconds(1));

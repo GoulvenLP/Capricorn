@@ -48,7 +48,8 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 				e.Init();
 		}
 	}
-	
+
+
 	protected void Post(SimEvent ev)  {
 		if(ev.getDateOccurence().compareTo(currentDate)<0) 
 			Logger.Fatal(this, "Post", "tentative de poster un événement antérieur au temps courant");

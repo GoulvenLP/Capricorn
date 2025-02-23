@@ -41,7 +41,6 @@ public class MoreRandom extends Random {
 		 */
 		public MoreRandom()
 		{
-			
 			super();
 			initialSeed = globalSeed;
 		}
