@@ -20,14 +20,7 @@
 			"classToFilter": [
 			],
 			"levelsToRecord":[
-				"Information",
-				"Detail",
-				"Warning",
-				"Error",
-				"Fatal",
-				"Data",
-				"DataSimple",
-				"DataRecordable"
+				"Detail"
 			]
 		},
 		{

@@ -107,6 +107,9 @@ public class Missile extends EntiteSimulee implements ILocatable {
             status = true;
         }
         Logger.Information(this, "isDestroyingTarget", "Missile " + this.getId() + " will explode target : " + status );
+
+
+
         return status;
     }
 
@@ -128,6 +131,12 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     this.isActive = false;
                     if (isDestroyingTarget()) {
                         mobile.explode();
+                        double distanceFromFactory = mobile.getPosition().position().distance(mobile.getTargetCoordinates().position());
+                        // warn the commandCenter to trace the info
+                        this.pcs.firePropertyChange("interception", null, true);
+                        this.pcs.firePropertyChange("distance", null, distanceFromFactory);
+                    } else {
+                        this.pcs.firePropertyChange("missile_failed", mobile, this);
                     }
                     destroyMissile();
                     this.pcs.firePropertyChange("missile_exploded", mobile, this);

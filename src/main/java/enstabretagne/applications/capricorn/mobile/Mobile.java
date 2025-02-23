@@ -81,7 +81,13 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		};
 	}
 
-
+	/**
+	 * Returns the coordinates of the crashing site of the mobile, i.e. the Factory coordinates
+	 * @return
+	 */
+	public Location getTargetCoordinates(){
+		return ini.direction;
+	}
 
 	/**
 	 * Generator of a random delay for the arrival of the first mobile, based on

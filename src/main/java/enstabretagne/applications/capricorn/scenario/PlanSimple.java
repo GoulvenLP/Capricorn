@@ -60,7 +60,7 @@ public class PlanSimple extends Plan{
 	public void initScenarii() {
 		for(int i=0; i< nbVCessnaCases;i++) {
 			double vCessna=vMinCessna;
-			for(int j=nbCessnaMin;j<=nbCessnaMax;j++) {
+			for(int j=nbCessnaMin;j<=nbCessnaMax;j+=100) { // + 100km/h between two measures
 				int nbCessna = j;
 				for(int k=0;k<periodCessnaCases;k++) {
 					double periodCessnaMinutes = periodArriveeCessnaMoy;

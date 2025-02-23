@@ -85,7 +85,7 @@ public class ScenarioSimple extends SimuScenario{
 		var iniCessna4 = new MobileInit("C4",cesna_4,LogicalDuration.ofSeconds(1), factory);
 		var iniCessna5 = new MobileInit("C5",cesna_5,LogicalDuration.ofSeconds(1), factory);
 
-		var cc = new CommandCenter(engine, iniCC);
+		var cc = new CommandCenter(engine, iniCC, ini.getNbCessna(), ini.getSpeed());
 
 
 		new Factory(engine, iniF, cc);

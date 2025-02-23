@@ -1,6 +1,5 @@
 package enstabretagne.applications.capricorn.commandcenter;
 
-import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
@@ -9,7 +8,6 @@ import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
-import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -22,12 +20,16 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
 
     private Sensor radarMode;
     private final Map<Missile, Mobile> activeMissiles;
+    private Traceability trace;
 
-    public CommandCenter(SimuEngine engine, InitData init){
+    public CommandCenter(SimuEngine engine, InitData init, int nbCessna, double vCessna){
         super(engine, init);
         this.activeMissiles = new HashMap<>();
         this.targetLastMobiles = new ArrayList<>();
         this.radarMode = Sensor.COMMAND_CENTER;
+        this.trace = new Traceability(init);
+        this.trace.setMobileNumber(nbCessna);
+        this.trace.setMobileSpeed(vCessna);
     }
 
     /**
@@ -88,6 +90,9 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         Missile missile = availableMissile.get();
         Logger.Detail(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné au mobile " + targetMobile);
 
+        //trace the missile
+        this.trace.incrementLaunchedMissiles();
+
         SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
             @Override
             public void process() {
@@ -97,7 +102,6 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         };
         super.Post(fireMissile);
     }
-
 
 
 
@@ -122,10 +126,12 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
     public void propertyChange(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("mobile")) {
             this.targetLastMobiles = new ArrayList<>((List<Mobile>) evt.getNewValue());
-            System.out.println(this.targetLastMobiles);
             this.action();
         } else if (evt.getPropertyName().equals("factory")) {
             Logger.Information(this, "propertyChange", "Alerte reçue : Usine touchée par un mobile.");
+
+            this.trace.incrementFactoryDamages();
+
             Mobile mobile = (Mobile) evt.getNewValue();
 
             // supprimer le missile associé au mobile s'il existe
@@ -148,6 +154,12 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
             if (activeMissiles.isEmpty()) {
                 resetCommandCenter();
             }
+        } else if (evt.getPropertyName().equals("interception")){
+            this.trace.incrementInterceptedMobiles();
+        } else if (evt.getPropertyName().equals("distance")){
+            this.trace.addDistance((Integer)evt.getNewValue());
+        } else if (evt.getPropertyName().equals("missile_failed")){
+            this.trace.incrementMissileFailure();
         }
     }
 
