@@ -121,10 +121,8 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     private void checkImpact() {
         // get the Mobile
-        // TODO ADJUST DISTANCE ?
         this.engine.recherche(e -> {
             if (e instanceof Mobile mobile) {
-                // TODO VERIFY IF DISTANCE IS OK
                 if (mobile.getPosition().position().distance(this.position.position()) < 5) { // plane's radius is 10m
                     Logger.Information(this, "checkImpact", "Missile " + this.getId() + " a atteint sa cible !");
                     this.isActive = false;

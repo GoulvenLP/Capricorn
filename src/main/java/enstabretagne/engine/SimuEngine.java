@@ -77,6 +77,7 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			if (e instanceof Mobile){
 				if (((Mobile) e).isLaunched()){
 					found = true;
+					Logger.Information(this, "SimuEngine", "Mobile is still active");
 					break;
 				}
 			}
@@ -91,7 +92,6 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 			}
 		}
 	}
-
 
 	public void simulate()
 	{
