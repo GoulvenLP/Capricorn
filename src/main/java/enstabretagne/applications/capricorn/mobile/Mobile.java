@@ -144,12 +144,24 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	 * Move.
 	 */
 	public void move() {
-		//Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
-		Vector2D direction = ini.direction.position().subtract(this.getPosition().position())
-				.normalize()
-				.multiply(10*this.speed / 200);
-		p=p.add(direction);
+		double speedKmPerSec = this.speed / 3600.0;
+
+		double periodSeconds = this.ini.period.DoubleValue();
+		double distanceKm = speedKmPerSec * periodSeconds;
+
+		Vector2D direction = ini.direction.position()
+				.subtract(this.getPosition().position())
+				.normalize();
+
+		double distanceX = distanceKm * this.ini.scaleX;
+		double distanceY = distanceKm * this.ini.scaleY;
+
+		Vector2D displacement = Vector2D.of(direction.getX() * distanceX, direction.getY() * distanceY);
+
+		p = p.add(displacement);
 	}
+
+
 	@Override
 	public String toString() {
 		return ini.name;

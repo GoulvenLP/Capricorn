@@ -5,6 +5,7 @@ import enstabretagne.applications.capricorn.expertise.ILocatable;
 import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
+import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
@@ -60,7 +61,10 @@ public class Missile extends EntiteSimulee implements ILocatable {
                 move(Missile.this.target); // très important, on utilise les coords de la cible mises à jour
                 checkImpact();
                 if (Move != null){
-                    Move.rescheduleAt(Now().add(Missile.this.ini.period));
+                    if(isEmbeddedRadarActivated())
+                        Move.rescheduleAt(Now().add(Missile.this.ini.period));
+                    else
+                        Move.rescheduleAt(Now().add(LogicalDuration.ofMillis(50)));
                     Post(Move);
                 }
             }
@@ -79,19 +83,24 @@ public class Missile extends EntiteSimulee implements ILocatable {
             this.embeddedRadarActivated = true;
             Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
             this.pcs.firePropertyChange("switchingRadar", null, null);
-            this.speed = 2000;
         }
+        double speedKmPerSec = this.speed / 3600.0;
 
-        // Calcul du vecteur direction
+        double periodSeconds = this.ini.period.DoubleValue();
+        double distanceKm = speedKmPerSec * periodSeconds;
+
         Vector2D currentPos = this.position.position();
         Vector2D targetPos = target.position();
-        Vector2D direction = targetPos.subtract(currentPos)
-                .normalize()
-                .multiply(this.speed / 150);    // todo right scale?
+        Vector2D direction = targetPos.subtract(currentPos).normalize();
 
-        // Mise à jour de la position du missile
-        this.position = this.position.add(direction);
+        double distanceX = distanceKm * this.ini.scaleX;
+        double distanceY = distanceKm * this.ini.scaleY;
+
+        Vector2D displacement = Vector2D.of(direction.getX() * distanceX, direction.getY() * distanceY);
+
+        this.position = this.position.add(displacement);
     }
+
 
     /**
      * According to the probability of the missile to destroy a target,

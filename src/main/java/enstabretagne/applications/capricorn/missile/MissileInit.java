@@ -11,11 +11,16 @@ public class MissileInit extends InitData {
     final Integer id;
     public final LogicalDuration reloadTime;
 
-    public MissileInit(String name, Location position, LogicalDuration period, Integer id, LogicalDuration reloadTime) {
+    public final double scaleX;
+    public final double scaleY;
+
+    public MissileInit(String name, Location position, LogicalDuration period, Integer id, LogicalDuration reloadTime, double scaleX, double scaleY) {
         super(name);
         this.position = position;
         this.period = period;
         this.id = id;
         this.reloadTime = reloadTime;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
     }
 }
