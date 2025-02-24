@@ -14,7 +14,7 @@ public class MouvementPlanApp {
 		PlanSimple ps = new PlanSimple(2,
 				ldtStart.toString(),
 				ldtEnd.toString(),
-				200, 200, 1, 3, 5, 3, 5, 5);
+				200, 300, 1, 3, 5, 3, 5, 5);
 		
 		PlanMonitor pm = new PlanMonitor(ps);
 		pm.run();
