@@ -151,13 +151,13 @@ public class ScenarioSimple extends SimuScenario{
 
 	/**
 	 * Generator of a random delay for the arrival of the first mobile, based on
-	 * Poisson's law. It takes an average of 5 minutes for a plane to go. This
-	 * delay must be inferior to 10 minutes.
+	 * Poisson's law. It takes an average of 1 minute for a plane to go. This
+	 * delay must be inferior to 2 minutes. Nb: in this system time has to be multiplied by 5 irl.
 	 * @return a delay of time in seconds
 	 */
 	private static int getStarterDelay(){
-		final double lambda = 1./10.;
-		final double max_delay = 10 * 60.;
+		final double lambda = 1./60.; // mean average: 1 minute
+		final double max_delay = 2 * 60.; // max delay: 2 minutes
 		Random rand = new Random();
 		double time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
 		while (time >= max_delay){
