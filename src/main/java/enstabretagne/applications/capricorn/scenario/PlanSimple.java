@@ -59,26 +59,28 @@ public class PlanSimple extends Plan{
 	@Override
 	public void initScenarii() {
 		for(int i=0; i< nbVCessnaCases;i++) {
-			double vCessna=vMinCessna;
-			for(int j=nbCessnaMin;j<=nbCessnaMax;j++) {
-				int nbCessna = j;
-				for(int k=0;k<periodCessnaCases;k++) {
-					double periodCessnaMinutes = periodArriveeCessnaMoy;
-					
-					for(int n =0;n<getNbReplique();n++) {
-						ScenarioSimpleInit ini = new ScenarioSimpleInit(
-								"CAPRICORN v="+i + " n="+j + " d="+k +" r="+n,
-								n,
-								n,///utilisation de n comme graine
-								start,
-								end,
-								vCessna, 
-								nbCessna, 
-								periodCessnaMinutes);
-						listeScenarios.add(new ScenarioSimple(getEngine(), ini));
+			for(double v_cesna = vMinCessna;v_cesna<=VMaxCessna;v_cesna+=100) {
+				for(int j=nbCessnaMin;j<=nbCessnaMax;j++) {
+					int nbCessna = j;
+					for(int k=0;k<periodCessnaCases;k++) {
+						double periodCessnaMinutes = periodArriveeCessnaMoy;
+
+						for(int n =0;n<getNbReplique();n++) {
+							ScenarioSimpleInit ini = new ScenarioSimpleInit(
+									"CAPRICORN v="+v_cesna + " n="+j + " d="+k +" r="+n,
+									n,
+									n,///utilisation de n comme graine
+									start,
+									end,
+									v_cesna,
+									nbCessna,
+									periodCessnaMinutes);
+							listeScenarios.add(new ScenarioSimple(getEngine(), ini));
+						}
 					}
 				}
 			}
+
 		}
 	}
 
