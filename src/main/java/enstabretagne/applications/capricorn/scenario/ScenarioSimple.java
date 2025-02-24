@@ -23,8 +23,9 @@ import enstabretagne.engine.SimuScenario;
 
 import java.util.Random;
 
-
 public class ScenarioSimple extends SimuScenario{
+
+	public static final int RANGE_FACTOR = 3; // constant to have a better visualisation of the map
 
 	private ScenarioSimpleInit ini;
 
@@ -76,7 +77,7 @@ public class ScenarioSimple extends SimuScenario{
 		var iniM4 = new MissileInit("M4",p4,LogicalDuration.ofSeconds(1), 4,LogicalDuration.ofSeconds(3));
 
 		// Radar
-		var iniR = new RadarInit("R",radar,300, LogicalDuration.ofSeconds(1));
+		var iniR = new RadarInit("R",radar,100 * RANGE_FACTOR, LogicalDuration.ofSeconds(1));
 
 		// Command Center
 		var iniCC = new CommandCenterInit("CommandCenter");
