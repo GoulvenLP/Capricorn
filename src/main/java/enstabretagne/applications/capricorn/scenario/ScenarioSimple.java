@@ -157,7 +157,7 @@ public class ScenarioSimple extends SimuScenario{
 	 */
 	private static int getStarterDelay(){
 		final double lambda = 1./60.; // mean average: 1 minute
-		final double max_delay = 2 * 60.; // max delay: 2 minutes
+		final double max_delay = 10 * 60.; // max delay: 2 minutes
 		Random rand = new Random();
 		double time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
 		while (time >= max_delay){
