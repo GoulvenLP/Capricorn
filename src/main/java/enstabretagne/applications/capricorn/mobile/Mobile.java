@@ -11,8 +11,6 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 
-import java.nio.Buffer;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -33,11 +31,11 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	 * The Move.
 	 */
 	SimEvent Move;
-	private double speed;
-	private double probaFail;
+	private final double speed;
+	private final double probaFail;
 	private boolean reachedObjective;
 	private boolean firstTime;
-	private LogicalDuration delayBeforeLaunch;
+	private final LogicalDuration delayBeforeLaunch;
 
 	/**
 	 * Instantiates a new Mobile.
@@ -45,7 +43,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 	 * @param engine the engine
 	 * @param ini    the ini
 	 * @param speed  the speed
-	 * @param delayBeforeLaunch
+	 * @param delayBeforeLaunch the delay before launch
 	 */
 	public Mobile(SimuEngine engine, InitData ini, double speed, LogicalDuration delayBeforeLaunch) {
 		super(engine, ini);
@@ -81,25 +79,6 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 				Post(Move);
 			}
 		};
-	}
-
-
-
-	/**
-	 * Generator of a random delay for the arrival of the first mobile, based on
-	 * Poisson's law. It takes an average of 5 minutes for a plane to go. This
-	 * delay must be inferior to 10 minutes.
-	 * @return a LogicalDuration of time in seconds
-	 */
-	private static LogicalDuration getStarterDelay(){
-		final double lambda = 1./10.;
-		final double max_delay = 10 * 60.;
-		Random rand = new Random();
-		double time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
-		while (time >= max_delay){
-			time = (-Math.log(1.0 - rand.nextDouble()) / lambda);
-		}
-		return LogicalDuration.ofSeconds((int)time);
 	}
 
 	/**
