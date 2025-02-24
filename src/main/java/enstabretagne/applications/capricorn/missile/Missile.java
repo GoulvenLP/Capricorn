@@ -16,6 +16,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Random;
 
+import static enstabretagne.applications.capricorn.mobile.Mobile.SPEED_FACTOR;
+
 public class Missile extends EntiteSimulee implements ILocatable {
 
     Location position;
@@ -64,7 +66,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     if(!isEmbeddedRadarActivated())
                         Move.rescheduleAt(Now().add(Missile.this.ini.period));
                     else
-                        Move.rescheduleAt(Now().add(LogicalDuration.ofMillis(50)));
+                        Move.rescheduleAt(Now().add(LogicalDuration.ofMillis(10)));
                     Post(Move);
                 }
             }
@@ -79,11 +81,16 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     private void move(Location target) {
         // Vérification et activation du radar embarqué si nécessaire
+        double adaptedSpeed;
+        if (!this.embeddedRadarActivated){
+            adaptedSpeed = this.speed / 3600;
+        } else {
+            adaptedSpeed = this.speed / (3600 * 100);
+        }
         if (!this.embeddedRadarActivated && isEmbeddedRadarRelaying(target)) {
             this.embeddedRadarActivated = true;
             Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
             this.pcs.firePropertyChange("switchingRadar", null, null);
-            //this.speed = 2000;
         }
 
         // Calcul du vecteur direction
@@ -91,7 +98,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Vector2D targetPos = target.position();
         Vector2D direction = targetPos.subtract(currentPos)
                 .normalize()
-                .multiply(this.speed / 150);    // todo right scale?
+                .multiply(adaptedSpeed*SPEED_FACTOR);    // todo right scale?
 
         // Mise à jour de la position du missile
         this.position = this.position.add(direction);

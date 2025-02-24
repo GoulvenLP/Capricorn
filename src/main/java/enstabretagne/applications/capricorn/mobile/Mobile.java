@@ -19,7 +19,7 @@ import java.util.Random;
  * The type Mobile.
  */
 public class Mobile extends EntiteSimulee implements ILocatable{
-
+	public static final int SPEED_FACTOR = 50;
 	/**
 	 * The Ini.
 	 */
@@ -145,7 +145,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		//Logger.Information(this, "bonjour", "Bonjour Position :" + getPosition());
 		Vector2D direction = ini.direction.position().subtract(this.getPosition().position())
 				.normalize()
-				.multiply(10*this.speed / 200);
+				.multiply(SPEED_FACTOR*this.speed /3600);
 		p=p.add(direction);
 	}
 	@Override
