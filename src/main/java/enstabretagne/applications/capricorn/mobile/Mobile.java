@@ -11,6 +11,7 @@ import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
 
+import java.nio.Buffer;
 import java.util.Objects;
 import java.util.Random;
 
@@ -156,4 +157,11 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 		return this.ini.name;
 	}
 
+	/**
+	 * Returns the coordinates of the crashing site of the mobile, i.e. the Factory coordinates
+	 * @return the coordinates of the target
+	 */
+	public Location getTargetCoordinates(){
+		return ini.direction;
+	}
 }

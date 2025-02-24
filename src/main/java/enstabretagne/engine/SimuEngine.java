@@ -67,9 +67,9 @@ public class SimuEngine implements ISimulationDateProvider, IScenarioIdProvider{
 
 	public void simulate()
 	{
-		Logger.Detail(this, "simulate", "Début de la simulation");
+		Logger.Information(this, "simulate", "Début de la simulation");
 		simulate(end.soustract(currentDate));
-		Logger.Detail(this, "simulate", "Fin de la simulation");
+		Logger.Information(this, "simulate", "Fin de la simulation");
 	}
 	boolean pauseFlag;
 	public void releaseFlag()

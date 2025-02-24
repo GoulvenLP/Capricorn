@@ -74,7 +74,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
 
     public void updateTarget(Location newTarget) {
         this.target = newTarget; // Mise à jour de la cible
-        Logger.Detail(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
+        Logger.Information(this, "updateTarget", "Missile " + this.getId() + " redirected to new coordinates");
     }
 
     private void move(Location target) {
@@ -108,6 +108,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Random r = new Random();
         int val = r.nextInt(101);
         if (val > this.probaFail * 10){
+            Logger.Detail(this, "explode", "mobile_failure, 1");
             status = true;
         }
         Logger.Information(this, "isDestroyingTarget", "Missile " + this.getId() + " will explode target : " + status );
@@ -132,6 +133,14 @@ public class Missile extends EntiteSimulee implements ILocatable {
                     this.isActive = false;
                     if (isDestroyingTarget()) {
                         mobile.explode();
+                        double distanceFromFactory = mobile.getPosition().position().distance(mobile.getTargetCoordinates().position());
+                        Logger.Detail(this, "checkImpact", "Interception_mobile, 1");
+                        Logger.Detail(this, "checkImpact", "distance, " + distanceFromFactory);
+                        this.pcs.firePropertyChange("interception", null, true);
+                        this.pcs.firePropertyChange("distance", null, distanceFromFactory);
+                    }else{
+                        Logger.Detail(this, "checkImpact", "missile_failure, 1");
+                        this.pcs.firePropertyChange("missile_failed", mobile, this);
                     }
                     destroyMissile();
                     this.pcs.firePropertyChange("missile_exploded", mobile, this);

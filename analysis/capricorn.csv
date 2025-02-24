@@ -1,0 +1,24 @@
+Scenario;Replique;Temps Reel;Temps Logique;Niveau de Log;Nom Objet;Fonction;Message
+DefaultScenario;0;2025-02-24T09:00:30.013550Z;PAS DE DATE LOGIQUE;Detail;enstabretagne.applications.capricorn.scenario.ScenarioSimple@413336d5;scenario_simple;scenario_name,SC1
+DefaultScenario;0;2025-02-24T09:00:30.026252Z;PAS DE DATE LOGIQUE;Detail;enstabretagne.applications.capricorn.scenario.ScenarioSimple@413336d5;scenario_simple;nb_mobiles,5
+DefaultScenario;0;2025-02-24T09:00:30.026550Z;PAS DE DATE LOGIQUE;Detail;enstabretagne.applications.capricorn.scenario.ScenarioSimple@413336d5;scenario_simple;mobiles_speed,200.0
+SC1;1;2025-02-24T09:01:05.648872Z;24/02/2025 10:00:52.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:06.613688Z;24/02/2025 10:00:53.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:09.613615Z;24/02/2025 10:00:56.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:09.615903Z;24/02/2025 10:00:56.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:10.613956Z;24/02/2025 10:00:57.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:10.614372Z;24/02/2025 10:00:57.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:20.617220Z;24/02/2025 10:01:07.516903;Detail;enstabretagne.applications.capricorn.missile.Missile@72a071e0;explode;mobile_failure, 1
+SC1;1;2025-02-24T09:01:20.635977Z;24/02/2025 10:01:07.516903;Detail;enstabretagne.applications.capricorn.missile.Missile@72a071e0;checkImpact;Interception_mobile, 1
+SC1;1;2025-02-24T09:01:20.636267Z;24/02/2025 10:01:07.516903;Detail;enstabretagne.applications.capricorn.missile.Missile@72a071e0;checkImpact;distance, 230.0735254367727
+SC1;1;2025-02-24T09:01:21.615116Z;24/02/2025 10:01:08.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:22.614696Z;24/02/2025 10:01:09.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:37.613610Z;24/02/2025 10:01:24.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;propertyChange;factory_damage, 1
+SC1;1;2025-02-24T09:01:37.616500Z;24/02/2025 10:01:24.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:01:41.613454Z;24/02/2025 10:01:28.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;propertyChange;factory_damage, 1
+SC1;1;2025-02-24T09:02:06.614817Z;24/02/2025 10:01:53.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:02:07.614031Z;24/02/2025 10:01:54.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;scheduleFireMissile;missile_shot, 1
+SC1;1;2025-02-24T09:02:23.880518Z;24/02/2025 10:02:10.766903;Detail;enstabretagne.applications.capricorn.missile.Missile@4e9f9c7c;explode;mobile_failure, 1
+SC1;1;2025-02-24T09:02:23.881861Z;24/02/2025 10:02:10.766903;Detail;enstabretagne.applications.capricorn.missile.Missile@4e9f9c7c;checkImpact;Interception_mobile, 1
+SC1;1;2025-02-24T09:02:23.882569Z;24/02/2025 10:02:10.766903;Detail;enstabretagne.applications.capricorn.missile.Missile@4e9f9c7c;checkImpact;distance, 143.6733972518788
+SC1;1;2025-02-24T09:02:38.617790Z;24/02/2025 10:02:25.516903;Detail;enstabretagne.applications.capricorn.commandcenter.CommandCenter@4329dccb;propertyChange;factory_damage, 1

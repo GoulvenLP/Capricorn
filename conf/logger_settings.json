@@ -13,21 +13,14 @@
 		{
 			"activate":true,
 			"parametres": {
-				"FileName": "capricorn.xlsx",
-				"LoggerKind": "enstabretagne.base.logger.loggerimpl.Excel.ExcelDataLogger",
+				"FileName": "capricorn.csv",
+				"LoggerKind": "enstabretagne.base.logger.loggerimpl.csv.CSVDataLogger",
 				"DirectoryName": ".\\log"
 			},
 			"classToFilter": [
 			],
 			"levelsToRecord":[
-				"Information",
-				"Detail",
-				"Warning",
-				"Error",
-				"Fatal",
-				"Data",
-				"DataSimple",
-				"DataRecordable"
+				"Detail"
 			]
 		},
 		{

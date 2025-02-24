@@ -28,7 +28,7 @@ public class FactoryEvent extends SimEvent {
 
     @Override
     public void process() {
-        Logger.Detail(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
+        Logger.Information(entitePorteuseEvenement, "FactoryEvent.Process", "FactoryEvent à " + getDateOccurence());
 
         Optional<Mobile> mobileAbove = entitePorteuseEvenement.recherche(e -> e instanceof Mobile &&
                         isMobileOnFactory((Mobile) e) && e.getEtat() != EntiteSimulee.EtatEntite.DEAD)
