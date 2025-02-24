@@ -1,6 +1,5 @@
 package enstabretagne.applications.capricorn.commandcenter;
 
-import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.missile.Missile;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
@@ -9,13 +8,17 @@ import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
 import enstabretagne.engine.SimuEngine;
-import org.apache.commons.geometry.euclidean.twod.Vector2D;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
+import static enstabretagne.applications.capricorn.scenario.ScenarioSimple.RANGE_FACTOR;
+
+
 public class CommandCenter extends EntiteSimulee implements PropertyChangeListener {
+
+
     private enum Sensor { COMMAND_CENTER, MISSILE}; // source of the radar used to detect the target
 
     private List<Mobile> targetLastMobiles;
@@ -69,7 +72,7 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
         Optional<Missile> availableMissile = this.engine.recherche(e -> e instanceof Missile)
                 .stream()
                 .map(e -> (Missile) e)
-                .filter(m -> !activeMissiles.containsKey(m)) // Ne prendre que les missiles inactifs
+                .filter(m -> !activeMissiles.containsKey(m) && m.getPosition().position().distance(targetMobile.getPosition().position()) <= 50 * RANGE_FACTOR * 2) // Ne prendre que les missiles inactifs
                 .min(Comparator.comparingDouble(m -> m.getPosition().position().distance(targetMobile.getPosition().position())));
 
         if (availableMissile.isEmpty()) {

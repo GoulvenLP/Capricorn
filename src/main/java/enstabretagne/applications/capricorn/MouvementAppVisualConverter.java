@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 public class MouvementAppVisualConverter extends enstabretagne.moniteur2D.VisualConverter {
 
+
 	@Override
 	public void init(SimuEngine engine, Canvas background, Canvas objects, double maxX, double maxY) {
 		super.init(engine, background, objects, maxX, maxY);
