@@ -5,6 +5,7 @@ import enstabretagne.applications.capricorn.expertise.ILocatable;
 import enstabretagne.applications.capricorn.expertise.Location;
 import enstabretagne.applications.capricorn.mobile.Mobile;
 import enstabretagne.base.logger.Logger;
+import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.engine.EntiteSimulee;
 import enstabretagne.engine.InitData;
 import enstabretagne.engine.SimEvent;
@@ -60,7 +61,10 @@ public class Missile extends EntiteSimulee implements ILocatable {
                 move(Missile.this.target); // très important, on utilise les coords de la cible mises à jour
                 checkImpact();
                 if (Move != null){
-                    Move.rescheduleAt(Now().add(Missile.this.ini.period));
+                    if(!isEmbeddedRadarActivated())
+                        Move.rescheduleAt(Now().add(Missile.this.ini.period));
+                    else
+                        Move.rescheduleAt(Now().add(LogicalDuration.ofMillis(50)));
                     Post(Move);
                 }
             }
@@ -79,7 +83,7 @@ public class Missile extends EntiteSimulee implements ILocatable {
             this.embeddedRadarActivated = true;
             Logger.Information(this, "move", "Alerting Command Center for switching radar mode");
             this.pcs.firePropertyChange("switchingRadar", null, null);
-            this.speed = 2000;
+            //this.speed = 2000;
         }
 
         // Calcul du vecteur direction
