@@ -25,7 +25,7 @@ public class MouvementApp {
 		var ldStart = LogicalDateTime.Now();
 		var ldEnd = ldStart.add(LogicalDuration.ofMinutes(10));
 
-		var sc = new ScenarioSimpleInit("SC1",1,graine,ldStart.toString(),ldEnd.toString(), 200, 5, 5);
+		var sc = new ScenarioSimpleInit("SC1",1,graine,ldStart.toString(),ldEnd.toString(), 300, 5, 5);
 
 		var scSerialized = jsonb.toJson(sc);
 

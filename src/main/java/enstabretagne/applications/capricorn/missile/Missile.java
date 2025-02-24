@@ -116,7 +116,6 @@ public class Missile extends EntiteSimulee implements ILocatable {
         Random r = new Random();
         int val = r.nextInt(101);
         if (val > this.probaFail * 10){
-            Logger.Detail(this, "explode", "mobile_failure, 1");
             status = true;
         }
         Logger.Information(this, "isDestroyingTarget", "Missile " + this.getId() + " will explode target : " + status );
@@ -126,9 +125,9 @@ public class Missile extends EntiteSimulee implements ILocatable {
     public void destroyMissile(){
         if(this.Move.Posted()){
             // event pour recharger le missile après destruction
-            this.commandCenter.reloadMissile(this);
             unPost(this.Move);
             terminate();
+            this.commandCenter.reloadMissile(this);
         }
     }
 

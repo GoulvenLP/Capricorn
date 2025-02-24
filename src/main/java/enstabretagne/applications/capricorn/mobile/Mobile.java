@@ -61,7 +61,7 @@ public class Mobile extends EntiteSimulee implements ILocatable{
 					Random rand = new Random();
 					int proba = rand.nextInt(101);
 					if (proba <= probaFail * 10){
-						Logger.Information(this, "explode", "Cessna missied the factory");
+						Logger.Detail(this, "checkImpact", "mobile_failure, 1");
 					} else {
 						Logger.Information(this, "explode", "Factory destroyed");
 						reachedObjective = true;

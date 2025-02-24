@@ -82,14 +82,14 @@ public class CommandCenter extends EntiteSimulee implements PropertyChangeListen
 
         Missile missile = availableMissile.get();
         Logger.Information(this, "scheduleFireMissile", "Missile " + missile.getId() + " assigné au mobile " + targetMobile);
-        Logger.Detail(this, "scheduleFireMissile", "missile_shot, 1");
         SimEvent fireMissile = new SimEvent(engine.Now().add(LogicalDuration.ofSeconds(2))) {
             @Override
             public void process() {
                 missile.Fire(targetMobile.getPosition());
-                activeMissiles.put(missile, targetMobile); // Associer le missile au mobile
+                Logger.Detail(this, "scheduleFireMissile", missile.ini.name+",missile_shot, 1");
             }
         };
+        activeMissiles.put(missile, targetMobile);
         super.Post(fireMissile);
     }
 
