@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Random;
 
+import static enstabretagne.applications.capricorn.mobile.Mobile.RADAR_CYCLE;
 import static enstabretagne.applications.capricorn.mobile.Mobile.SPEED_FACTOR;
 
 public class Missile extends EntiteSimulee implements ILocatable {
@@ -83,9 +84,9 @@ public class Missile extends EntiteSimulee implements ILocatable {
         // Vérification et activation du radar embarqué si nécessaire
         double adaptedSpeed;
         if (!this.embeddedRadarActivated){
-            adaptedSpeed = this.speed / 3600;
+            adaptedSpeed = RADAR_CYCLE * this.speed / 3600;
         } else {
-            adaptedSpeed = this.speed / (3600 * 100);
+            adaptedSpeed = RADAR_CYCLE * this.speed / (3600 * 100);
         }
         if (!this.embeddedRadarActivated && isEmbeddedRadarRelaying(target)) {
             this.embeddedRadarActivated = true;
